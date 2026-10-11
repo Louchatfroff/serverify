@@ -41,7 +41,7 @@ jobs:
           ./gradlew build --no-daemon \
             -Pminecraft_version="${{ matrix.minecraft }}" \
             -Pfabric_api_version="${{ matrix.fabric_api }}" \
-            -Pcompat="${{ matrix.compat }}" \
+            -Puniversalcraft_version="${{ matrix.universalcraft }}" \
             "-Pminecraft_range=${{ matrix.range }}" \
             ${VERSION:+-Pversion="$VERSION"}
       - uses: actions/upload-artifact@v4
@@ -50,4 +50,5 @@ jobs:
           path: |
             build/libs/serverify-mc*.jar
             !build/libs/*-sources.jar
+            !build/libs/*-gametest.jar
           if-no-files-found: error

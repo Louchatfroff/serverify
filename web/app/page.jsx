@@ -35,7 +35,7 @@ export default async function Home() {
 
       <main>
         <div className="shot">
-          <Image src={shot("2-browser-loaded")} alt="The Serverify server browser with category sidebar and server cards" width={854} height={480} priority />
+          <Image src={shot("browser")} alt="The Serverify server browser with category sidebar and server cards" width={854} height={480} priority />
         </div>
 
         <section aria-labelledby="features">
@@ -49,7 +49,7 @@ export default async function Home() {
             ))}
           </ul>
           <div className="shot">
-            <Image src={shot("8-detail-hypixel")} alt="A server page showing live ping, player count and the server message" width={854} height={480} />
+            <Image src={shot("detail")} alt="A server page showing live ping, player count and the server message" width={854} height={480} />
           </div>
         </section>
 
@@ -60,10 +60,10 @@ export default async function Home() {
               Install <a href="https://fabricmc.net/use/installer/">Fabric Loader</a> for your Minecraft version.
             </li>
             <li>
-              Download <a href="https://modrinth.com/mod/fabric-api">Fabric API</a> for the same version.
+              Download <a href="https://modrinth.com/mod/fabric-api">Fabric API</a> and <a href="https://modrinth.com/mod/fabric-language-kotlin">Fabric Language Kotlin</a> for the same version.
             </li>
             <li>
-              Put both files, plus the Serverify download above, in your <code>.minecraft/mods</code> folder.
+              Put all three files, including the Serverify download above, in your <code>.minecraft/mods</code> folder.
             </li>
             <li>
               Start the game, open <strong>Multiplayer</strong> and press the <strong>Serverify</strong> button.
@@ -77,7 +77,7 @@ export default async function Home() {
       </main>
 
       <footer>
-        Serverify by <a href="https://github.com/Louchatfroff">Louchatfroff</a>. Free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL v3</a>. Written with AI assistance. No AI-generated or stolen assets. Not affiliated with Mojang or Microsoft. Server listings come from third-party sites.
+        Serverify by <a href="https://github.com/Louchatfroff">Louchatfroff</a>. Free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL v3</a>. Interface heavily inspired by <a href="https://github.com/DeDiamondPro/Resourcify">Resourcify</a> by DeDiamondPro. Written with AI assistance. No AI-generated or stolen assets. Not affiliated with Mojang or Microsoft. Server listings come from third-party sites.
       </footer>
     </div>
   );

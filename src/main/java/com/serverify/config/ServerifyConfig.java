@@ -20,7 +20,6 @@ public final class ServerifyConfig {
 
 	public boolean minecraftListInfoEnabled = true;
 	public boolean topMcServersEnabled = true;
-	public boolean animations = true;
 	public int refreshSeconds = 45;
 
 	private transient Path file;

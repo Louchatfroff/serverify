@@ -36,5 +36,5 @@ jobs:
           ./gradlew build --no-daemon \
             -Pminecraft_version="${{ steps.v.outputs.mc }}" \
             -Pfabric_api_version="${{ steps.v.outputs.api }}" \
-            -Pcompat=show \
+            -Puniversalcraft_version="${{ steps.v.outputs.mc }}" \
             "-Pminecraft_range=>=${{ steps.v.outputs.mc }}"

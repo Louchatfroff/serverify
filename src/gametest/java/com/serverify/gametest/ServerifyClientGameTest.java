@@ -3,91 +3,94 @@
 
 package com.serverify.gametest;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.serverify.client.gui.ConfigScreen;
-import com.serverify.client.gui.ServerBrowserScreen;
-import com.serverify.client.gui.ServerDetailScreen;
+import com.serverify.gui.ServerBrowserScreen;
+import com.serverify.gui.ServerScreen;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
-import com.mojang.blaze3d.platform.InputConstants;
 
-/** Drives the real client through the browser and saves screenshots under build/run/clientGameTest/screenshots. */
 @SuppressWarnings("UnstableApiUsage")
 public final class ServerifyClientGameTest implements FabricClientGameTest {
-	private static final int LOAD_TICKS = 160;
-	private static final int PING_TICKS = 100;
+	private static final int LOAD_TICKS = 200;
+	private static final int PING_TICKS = 120;
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
+		context.getInput().resizeWindow(1280, 720);
 		context.setScreen(() -> new JoinMultiplayerScreen(new TitleScreen()));
 		context.waitForScreen(JoinMultiplayerScreen.class);
 		context.waitTicks(5);
-		context.takeScreenshot("1-multiplayer-with-button");
+		context.takeScreenshot("1-multiplayer");
 
 		context.clickScreenButton("serverify.open");
 		context.waitForScreen(ServerBrowserScreen.class);
 		context.waitTicks(LOAD_TICKS);
-		context.takeScreenshot("2-browser-loaded");
+		context.takeScreenshot("2-browser");
 
-		context.getInput().resizeWindow(1280, 720);
-		context.waitTicks(10);
-		context.takeScreenshot("3-browser-large-window");
-		context.getInput().resizeWindow(854, 480);
-		context.waitTicks(10);
-
-		double scale = context.computeOnClient(mc -> mc.getWindow().getGuiScale());
-		click(context, scale, 300, 100);
-		context.waitForScreen(ServerDetailScreen.class);
+		click(context, 570, 300);
+		context.waitForScreen(ServerScreen.class);
 		context.waitTicks(PING_TICKS);
-		context.takeScreenshot("4-detail-first-server");
+		context.takeScreenshot("3-detail");
+
+		click(context, 560, 36);
+		context.waitTicks(5);
+		context.takeScreenshot("4-detail-status");
+
+		click(context, 166, 612);
+		click(context, 166, 656);
+		context.waitTicks(5);
+		context.takeScreenshot("5-detail-actions");
 
 		context.getInput().pressKey(InputConstants.KEY_ESCAPE);
 		context.waitForScreen(ServerBrowserScreen.class);
+		context.waitTicks(20);
+		context.takeScreenshot("6-back");
+
+		click(context, 1180, 36);
 		context.waitTicks(10);
-		context.takeScreenshot("5-back-in-browser");
+		context.takeScreenshot("7-dropdown");
 
-		click(context, scale, 50, 85);
+		click(context, 1140, 106);
 		context.waitTicks(LOAD_TICKS);
-		context.takeScreenshot("6-category-survival");
+		context.takeScreenshot("8-newest");
 
-		click(context, scale, 50, 49);
+		click(context, 80, 124);
 		context.waitTicks(LOAD_TICKS);
-		click(context, scale, 300, 20);
+		context.takeScreenshot("9-survival");
+
+		click(context, 80, 124);
+		context.getInput().setCursorPos(150, 400);
+		context.getInput().scroll(-20);
+		context.waitTicks(10);
+		context.takeScreenshot("10-sidebar-bottom");
+
+		click(context, 85, 676);
+		context.waitTicks(20);
+		context.takeScreenshot("11-favorites");
+
+		click(context, 85, 676);
+		context.waitTicks(LOAD_TICKS);
+
+		click(context, 700, 36);
 		context.getInput().typeChars("hypixel");
 		context.waitTicks(LOAD_TICKS);
-		context.takeScreenshot("7-search");
-
-		click(context, scale, 300, 100);
-		context.waitForScreen(ServerDetailScreen.class);
-		context.waitTicks(PING_TICKS);
-		context.takeScreenshot("8-detail-hypixel");
-
-		context.clickScreenButton("serverify.detail.add");
-		context.waitTicks(5);
-		context.clickScreenButton("serverify.detail.favorite");
-		context.waitTicks(5);
-		context.takeScreenshot("9-favorited");
-
-		context.getInput().pressKey(InputConstants.KEY_ESCAPE);
-		context.waitForScreen(ServerBrowserScreen.class);
-		click(context, scale, 50, 67);
-		context.waitTicks(20);
-		context.takeScreenshot("10-favorites-view");
+		context.takeScreenshot("12-search");
 
 		context.setScreen(() -> new ConfigScreen(new TitleScreen()));
 		context.waitForScreen(ConfigScreen.class);
-		click(context, scale, 213, 110);
 		context.waitTicks(5);
-		context.takeScreenshot("11-config");
+		context.takeScreenshot("13-settings");
 
 		context.setScreen(TitleScreen::new);
 	}
 
-	private static void click(ClientGameTestContext context, double scale, double guiX, double guiY) {
-		context.getInput().setCursorPos(guiX * scale, guiY * scale);
-		context.waitTicks(2);
+	private static void click(ClientGameTestContext context, double x, double y) {
+		context.getInput().setCursorPos(x, y);
+		context.waitTicks(3);
 		context.getInput().pressMouse(InputConstants.MOUSE_BUTTON_LEFT);
-		context.waitTicks(2);
+		context.waitTicks(3);
 	}
 }

@@ -3,9 +3,9 @@
 
 package com.serverify.client.gui;
 
-import com.serverify.client.ScreenCompat;
 import com.serverify.client.ServerifyClient;
 import com.serverify.config.ServerifyConfig;
+import gg.essential.universal.UScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -34,13 +34,12 @@ public final class ConfigScreen extends Screen {
 
 		addRenderableWidget(toggle(x, y, "serverify.config.source.listinfo", config.minecraftListInfoEnabled, value -> config.minecraftListInfoEnabled = value));
 		addRenderableWidget(toggle(x, y + ROW_STEP, "serverify.config.source.topmc", config.topMcServersEnabled, value -> config.topMcServersEnabled = value));
-		addRenderableWidget(toggle(x, y + 2 * ROW_STEP, "serverify.config.animations", config.animations, value -> config.animations = value));
 		addRenderableWidget(Button.builder(refreshLabel(config), button -> {
 			int next = config.refreshSeconds + REFRESH_STEP_SECONDS;
 			config.refreshSeconds = next > ServerifyConfig.MAX_REFRESH_SECONDS ? ServerifyConfig.MIN_REFRESH_SECONDS : next;
 			config.save();
 			button.setMessage(refreshLabel(config));
-		}).bounds(x, y + 3 * ROW_STEP, ROW_WIDTH, ROW_HEIGHT).build());
+		}).bounds(x, y + 2 * ROW_STEP, ROW_WIDTH, ROW_HEIGHT).build());
 
 		addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> onClose())
 				.bounds(x, height - 28, ROW_WIDTH, ROW_HEIGHT).build());
@@ -72,6 +71,6 @@ public final class ConfigScreen extends Screen {
 
 	@Override
 	public void onClose() {
-		ScreenCompat.open(minecraft, parent);
+		UScreen.displayScreen(parent);
 	}
 }

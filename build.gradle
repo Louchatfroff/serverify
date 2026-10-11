@@ -1,24 +1,32 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 plugins {
 	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
+	id 'com.gradleup.shadow' version "${shadow_version}"
 	id 'maven-publish'
 }
 
 repositories {
 	maven { url = 'https://maven.terraformersmc.com/' } // Mod Menu
+	maven { url = 'https://maven.dediamondpro.dev/releases' } // Elementa (DIAMOND build)
+	maven { url = 'https://repo.essential.gg/repository/maven-public/' } // UniversalCraft
+}
+
+configurations {
+	// Libraries copied into the mod jar (and relocated, see shadowJar).
+	shade
+	implementation.extendsFrom shade
 }
 
 loom {
-	splitEnvironmentSourceSets()
-
 	mods {
 		"serverify" {
 			sourceSet sourceSets.main
-			sourceSet sourceSets.client
 		}
 	}
 }
-
-sourceSets.client.java.srcDir "src/compat/${project.compat}/java"
 
 fabricApi {
 	configureTests {
@@ -33,11 +41,16 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	implementation "net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}"
 
 	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-	implementation "org.jsoup:jsoup:${project.jsoup_version}"
-	include "org.jsoup:jsoup:${project.jsoup_version}"
+	shade("gg.essential:universalcraft-${project.universalcraft_version}-fabric:${project.universalcraft_build}") { transitive = false }
+	shade("gg.essential:elementa:${project.elementa_version}") { transitive = false }
+	shade "org.jsoup:jsoup:${project.jsoup_version}"
+
+	productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}"
 
 	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
 	testImplementation "org.junit.jupiter:junit-jupiter"
@@ -65,6 +78,14 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 25
 }
 
+kotlin {
+	compilerOptions {
+		jvmTarget = JvmTarget.JVM_25
+		// Fabric Language Kotlin ships Kotlin 2.0 at the minimum version we support.
+		apiVersion = KotlinVersion.KOTLIN_2_0
+	}
+}
+
 java {
 	withSourcesJar()
 	sourceCompatibility = JavaVersion.VERSION_25
@@ -72,10 +93,36 @@ java {
 }
 
 jar {
-	def projectName = project.name
-	inputs.property "projectName", projectName
+	enabled = false
+}
 
+// The shaded jar is the one we ship. Elementa and UniversalCraft are relocated so they cannot clash with
+// the copies bundled by other mods.
+shadowJar {
+	archiveClassifier = ""
+	configurations = [project.configurations.shade]
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	mergeServiceFiles()
+	relocate "gg.essential.universal", "com.serverify.libs.universal"
+	relocate "gg.essential.elementa", "com.serverify.libs.elementa"
+	relocate "org.jsoup", "com.serverify.libs.jsoup"
+
+	def projectName = project.name
 	from("LICENSE") {
-		rename { "${it}_$projectName"}
+		rename { "${it}_$projectName" }
 	}
+}
+
+tasks.build.dependsOn shadowJar
+
+tasks.register('gametestJar', Jar) {
+	archiveClassifier = "gametest"
+	from sourceSets.gametest.output
+}
+
+tasks.register('runProductionClientGameTest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+	dependsOn shadowJar, tasks.named('gametestJar')
+	mods.from(shadowJar.archiveFile, tasks.named('gametestJar').flatMap { it.archiveFile })
+	jvmArgs.add("-Dfabric.client.gametest")
+	jvmArgs.add("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
 }

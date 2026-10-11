@@ -3,13 +3,14 @@
 
 package com.serverify.client;
 
-import com.serverify.client.gui.ServerBrowserScreen;
 import com.serverify.config.ServerifyConfig;
+import com.serverify.gui.ServerBrowserScreen;
 import com.serverify.favorites.Favorites;
 import com.serverify.provider.MinecraftListInfoSource;
 import com.serverify.provider.ServerSource;
 import com.serverify.provider.ServerSourceRegistry;
 import com.serverify.provider.TopMcServersSource;
+import gg.essential.universal.UScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ServerifyClient implements ClientModInitializer {
-	public static final IconCache ICONS = new IconCache();
 	public static Favorites favorites;
 	public static ServerifyConfig config;
 
@@ -50,7 +50,7 @@ public final class ServerifyClient implements ClientModInitializer {
 		ScreenEvents.AFTER_INIT.register((minecraft, screen, width, height) -> {
 			if (screen instanceof JoinMultiplayerScreen) {
 				Screens.getWidgets(screen).add(Button
-						.builder(Component.translatable("serverify.open"), button -> ScreenCompat.open(minecraft, new ServerBrowserScreen(screen)))
+						.builder(Component.translatable("serverify.open"), button -> UScreen.displayScreen(new ServerBrowserScreen()))
 						.bounds(width - 108, 6, 100, 20)
 						.build());
 			}
