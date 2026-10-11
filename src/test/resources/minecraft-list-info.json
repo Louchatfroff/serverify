@@ -1,0 +1,82 @@
+{
+ "member": [
+  {
+   "@id": "/api/v1/servers/3cae842f-09c0-4f08-9545-ed083670d04a",
+   "@type": "Server",
+   "uuid": "3cae842f-09c0-4f08-9545-ed083670d04a",
+   "slug": "mc.hypixel.net",
+   "host": "mc.hypixel.net",
+   "port": 25565,
+   "name": "Hypixel Network [1.8/26.3]  SB 0.27.2 MINISTERS | HALLOWEEN EVENT",
+   "online": true,
+   "players": 28413,
+   "maxPlayers": 200000,
+   "serverVersionRaw": "Requires MC 1.8 / 1.21",
+   "createdAt": "2021-07-13T08:46:52+00:00",
+   "game": {
+    "@id": "/api/v1/games/08a86d56-bd1a-4f3b-9b06-3b3b1fc36ea1",
+    "@type": "Game",
+    "name": "Minecraft",
+    "slug": "minecraft"
+   },
+   "description": "",
+   "votesCount": 0,
+   "lastOnline": "2026-10-10T13:02:39+00:00",
+   "faviconPath": "/static/servers/logo/3cae842f-09c0-4f08-9545-ed083670d04a.png",
+   "country": "PL",
+   "ratingsCount": 0
+  },
+  {
+   "@id": "/api/v1/servers/c8825c91-de98-4f9e-a75e-9a4b138f9494",
+   "@type": "Server",
+   "uuid": "c8825c91-de98-4f9e-a75e-9a4b138f9494",
+   "slug": "one.lemoncloud.net",
+   "host": "one.lemoncloud.net",
+   "port": 25565,
+   "name": "»━━━━━━━━━━━━━━» ╷LemonCloud╷ «━━━━━━━━━━━━━━« Skyblock | Factions | Survival | Prison | Creative",
+   "online": true,
+   "players": 4900,
+   "maxPlayers": 5000,
+   "serverVersionRaw": "Requires MC 1.20 - 26.3",
+   "createdAt": "2021-05-28T13:48:29+00:00",
+   "game": {
+    "@id": "/api/v1/games/08a86d56-bd1a-4f3b-9b06-3b3b1fc36ea1",
+    "@type": "Game",
+    "name": "Minecraft",
+    "slug": "minecraft"
+   },
+   "description": "",
+   "votesCount": 0,
+   "lastOnline": "2026-10-10T13:02:41+00:00",
+   "faviconPath": "/static/servers/logo/c8825c91-de98-4f9e-a75e-9a4b138f9494.png",
+   "country": "PL",
+   "ratingsCount": 0
+  },
+  {
+   "@id": "/api/v1/servers/a34cdf01-dbca-4f32-ac6b-9d56da1e4ced",
+   "@type": "Server",
+   "uuid": "a34cdf01-dbca-4f32-ac6b-9d56da1e4ced",
+   "slug": "minehut.com",
+   "host": "minehut.com",
+   "port": 25565,
+   "name": "MINEHUT » FIND YOUR NEXT SERVER HALLOWEEN EVENT • NEW SMP SEASON!",
+   "online": true,
+   "players": 4779,
+   "maxPlayers": 1481,
+   "serverVersionRaw": "Velocity 1.7.2-26.3",
+   "createdAt": "2021-05-28T13:45:12+00:00",
+   "game": {
+    "@id": "/api/v1/games/08a86d56-bd1a-4f3b-9b06-3b3b1fc36ea1",
+    "@type": "Game",
+    "name": "Minecraft",
+    "slug": "minecraft"
+   },
+   "description": "",
+   "votesCount": 0,
+   "lastOnline": "2026-10-10T13:01:42+00:00",
+   "faviconPath": "/static/servers/logo/a34cdf01-dbca-4f32-ac6b-9d56da1e4ced.png",
+   "country": "PL",
+   "ratingsCount": 0
+  }
+ ]
+}

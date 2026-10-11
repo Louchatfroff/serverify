@@ -1,0 +1,14 @@
+package com.serverify.client;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+
+/** Minecraft 26.1.x: screens are opened with {@code setScreen}. */
+public final class ScreenCompat {
+	private ScreenCompat() {
+	}
+
+	public static void open(Minecraft minecraft, Screen screen) {
+		minecraft.setScreen(screen);
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"schemaVersion": 1,
+	"id": "serverify-test",
+	"version": "1.0.0",
+	"name": "Serverify client game test",
+	"environment": "client",
+	"entrypoints": {
+		"fabric-client-gametest": ["com.serverify.gametest.ServerifyClientGameTest"]
+	},
+	"depends": {
+		"serverify": "*"
+	}
+}

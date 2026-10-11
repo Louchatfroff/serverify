@@ -1,0 +1,23 @@
+{
+	"schemaVersion": 1,
+	"id": "serverify",
+	"version": "${version}",
+	"name": "Serverify",
+	"description": "In-game Minecraft server browser.",
+	"authors": ["Serverify contributors"],
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["com.serverify.client.ServerifyClient"],
+		"modmenu": ["com.serverify.client.ServerifyModMenu"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "${minecraft_range}",
+		"java": ">=25",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}
