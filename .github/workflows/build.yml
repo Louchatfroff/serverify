@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  jars:
+    uses: ./.github/workflows/jars.yml
+
+  # Weekly: does the newest Minecraft release still build? Fails (and emails) if the game API moved.
+  latest:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+      - id: v
+        run: |
+          mc=$(curl -fsS https://piston-meta.mojang.com/mc/game/version_manifest_v2.json | jq -r .latest.release)
+          api=$(curl -fsS https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api/maven-metadata.xml \
+            | grep -oE "<version>[^<]*\+${mc}</version>" | tail -1 | sed -E 's/<[^>]+>//g')
+          echo "Latest release: $mc with Fabric API $api"
+          echo "mc=$mc" >> "$GITHUB_OUTPUT"
+          echo "api=$api" >> "$GITHUB_OUTPUT"
+      - name: Build against the latest release
+        run: |
+          ./gradlew build --no-daemon \
+            -Pminecraft_version="${{ steps.v.outputs.mc }}" \
+            -Pfabric_api_version="${{ steps.v.outputs.api }}" \
+            -Pcompat=show \
+            "-Pminecraft_range=>=${{ steps.v.outputs.mc }}"

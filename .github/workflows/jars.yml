@@ -1,0 +1,53 @@
+name: Build jars
+
+# Reusable: builds and tests one jar per entry in .github/versions.json.
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: Mod version to stamp on the jars (defaults to gradle.properties)
+        type: string
+        default: ""
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      include: ${{ steps.read.outputs.include }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: read
+        run: echo "include=$(jq -c . .github/versions.json)" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: matrix
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.matrix.outputs.include) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Build and test for Minecraft ${{ matrix.minecraft }}
+        env:
+          MOD_VERSION: ${{ inputs.version }}
+        run: |
+          VERSION="${MOD_VERSION#v}"
+          ./gradlew build --no-daemon \
+            -Pminecraft_version="${{ matrix.minecraft }}" \
+            -Pfabric_api_version="${{ matrix.fabric_api }}" \
+            -Pcompat="${{ matrix.compat }}" \
+            "-Pminecraft_range=${{ matrix.range }}" \
+            ${VERSION:+-Pversion="$VERSION"}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: serverify-mc${{ matrix.minecraft }}
+          path: |
+            build/libs/serverify-mc*.jar
+            !build/libs/*-sources.jar
+          if-no-files-found: error
