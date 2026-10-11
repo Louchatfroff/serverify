@@ -3,7 +3,7 @@ const API = process.env.GITHUB_API ?? "https://api.github.com";
 export const REPO_URL = `https://github.com/${REPO}`;
 
 const ASSET = /^serverify-mc(.+?)-\d[^/]*(?<!-sources)\.jar$/;
-const ONE_HOUR = 3600;
+const REVALIDATE_SECONDS = 300;
 
 const byVersionDesc = (a, b) => b.mc.localeCompare(a.mc, undefined, { numeric: true });
 
@@ -12,7 +12,7 @@ export async function getLatestRelease() {
   try {
     const res = await fetch(`${API}/repos/${REPO}/releases/latest`, {
       headers: { Accept: "application/vnd.github+json" },
-      next: { revalidate: ONE_HOUR },
+      next: { revalidate: REVALIDATE_SECONDS },
     });
     if (!res.ok) return null;
     const release = await res.json();

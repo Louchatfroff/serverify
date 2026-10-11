@@ -7,6 +7,8 @@
 
 A client-side [Fabric](https://fabricmc.net) mod that adds a fast, native **server browser** to Minecraft's Multiplayer screen. Search, filter, check live status and join, without leaving the game.
 
+**Website and downloads: <https://serverify-louchatfroffmcs-projects.vercel.app>**
+
 ![The Serverify server browser](docs/screenshots/2-browser-loaded.png)
 
 ## Features
