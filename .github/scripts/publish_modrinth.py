@@ -5,6 +5,7 @@ import json
 import os
 import re
 import sys
+import urllib.error
 import urllib.request
 import uuid
 from pathlib import Path
@@ -26,8 +27,12 @@ def call(method, path, token=None, data=None, content_type=None):
         request.add_header("Authorization", token)
     if content_type:
         request.add_header("Content-Type", content_type)
-    with urllib.request.urlopen(request) as response:
-        return json.load(response)
+    try:
+        with urllib.request.urlopen(request) as response:
+            return json.load(response)
+    except urllib.error.HTTPError as error:
+        detail = error.read().decode("utf8", "replace")[:500]
+        sys.exit(f"Modrinth {method} {path} failed with HTTP {error.code}: {detail}")
 
 
 def multipart(data, jar):
