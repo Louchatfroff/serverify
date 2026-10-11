@@ -16,6 +16,10 @@ Thanks for helping. Issues and pull requests are welcome.
 - Add a test for logic that can be tested without the game (see `src/test`).
 - A new server source implements `ServerSource`, loads after minecraft-list.info, and must fail quietly when the site is down.
 
+## License
+
+By contributing you agree that your work is licensed under the [GNU General Public License, version 3](LICENSE), like the rest of Serverify. Source files start with an SPDX header (`// SPDX-License-Identifier: GPL-3.0-only`); keep it on new files.
+
 ## Releasing
 
 Push a tag like `v0.2.0`. CI builds one jar per entry in `.github/versions.json` and publishes the release.

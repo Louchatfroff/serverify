@@ -77,7 +77,7 @@ export default async function Home() {
       </main>
 
       <footer>
-        Open source, MIT licensed. Not affiliated with Mojang or Microsoft. Server listings come from third-party sites.
+        Serverify by <a href="https://github.com/Louchatfroff">Louchatfroff</a>. Free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL v3</a>. Not affiliated with Mojang or Microsoft. Server listings come from third-party sites.
       </footer>
     </div>
   );

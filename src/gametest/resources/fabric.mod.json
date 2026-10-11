@@ -3,6 +3,8 @@
 	"id": "serverify-test",
 	"version": "1.0.0",
 	"name": "Serverify client game test",
+	"authors": ["Louchatfroff"],
+	"license": "GPL-3.0-only",
 	"environment": "client",
 	"entrypoints": {
 		"fabric-client-gametest": ["com.serverify.gametest.ServerifyClientGameTest"]

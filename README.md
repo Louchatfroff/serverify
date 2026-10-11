@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml/badge.svg)](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/Louchatfroff/serverify)](https://github.com/Louchatfroff/serverify/releases/latest)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
 ![Minecraft](https://img.shields.io/badge/minecraft-26.1%20%7C%2026.2%20%7C%2026.3-62b47a)
 
 A client-side [Fabric](https://fabricmc.net) mod that adds a fast, native **server browser** to Minecraft's Multiplayer screen. Search, filter, check live status and join, without leaving the game.
@@ -89,4 +89,4 @@ Server listings come from third-party sites. Some are read from public pages, so
 
 ## License
 
-[MIT](LICENSE)
+Serverify is free software, copyright (C) 2026 [Louchatfroff](https://github.com/Louchatfroff). You can redistribute it and modify it under the terms of the [GNU General Public License, version 3](LICENSE). It comes with no warranty.

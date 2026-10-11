@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Serverify, copyright (C) 2026 Louchatfroff (https://github.com/Louchatfroff)
+
 package com.serverify.favorites;
 
 import com.google.gson.Gson;
