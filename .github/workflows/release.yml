@@ -25,3 +25,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh release create "${{ github.ref_name }}" dist/*.jar --repo "${{ github.repository }}" --title "Serverify ${{ github.ref_name }}" --generate-notes
+
+  modrinth:
+    needs: publish
+    uses: ./.github/workflows/modrinth.yml
+    with:
+      tag: ${{ github.ref_name }}
+    secrets: inherit

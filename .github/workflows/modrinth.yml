@@ -1,0 +1,39 @@
+name: Publish to Modrinth
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
+    secrets:
+      MODRINTH_TOKEN:
+        required: false
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish
+        type: string
+        required: true
+
+jobs:
+  modrinth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish the release jars
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT: ${{ vars.MODRINTH_PROJECT || 'serverify' }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          if [ -z "$MODRINTH_TOKEN" ]; then
+            echo "MODRINTH_TOKEN is not set, skipping"
+            exit 0
+          fi
+          mkdir dist
+          gh release download "$TAG" --pattern '*.jar' --dir dist
+          export CHANGELOG="$(gh release view "$TAG" --json body --jq .body)"
+          python3 .github/scripts/publish_modrinth.py dist
