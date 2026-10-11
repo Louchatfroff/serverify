@@ -6,7 +6,7 @@
 	"description": "In-game Minecraft server browser.",
 	"authors": ["Louchatfroff"],
 	"contact": {
-		"homepage": "https://serverify-louchatfroffmcs-projects.vercel.app",
+		"homepage": "https://serverify.louchat.site",
 		"sources": "https://github.com/Louchatfroff/serverify",
 		"issues": "https://github.com/Louchatfroff/serverify/issues"
 	},
