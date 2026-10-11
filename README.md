@@ -87,6 +87,12 @@ Pushing a tag such as `v0.2.0` builds a jar for every version in `versions.json`
 
 Server listings come from third-party sites. Some are read from public pages, so listings can change or stop working without notice. Serverify is not affiliated with Mojang, Microsoft or any listed server.
 
+## AI use and assets
+
+Serverify's source code, tests, documentation and website text were written with the help of an AI coding assistant ([Claude](https://www.anthropic.com/claude), by Anthropic).
+
+No assets are AI-generated or taken from other people's work. The mod bundles no images, textures, sounds, models or fonts of its own; the only bundled third-party code is [jsoup](https://jsoup.org) (MIT license). The screenshots in this repository are real captures of the game running the mod. They show Minecraft's interface and server names and icons from public listings, which belong to their owners. The website uses the open-licensed fonts Inter, Open Sans and Inconsolata. The test fixtures are short captured samples of public listing data, used only to test the parsers.
+
 ## License
 
 Serverify is free software, copyright (C) 2026 [Louchatfroff](https://github.com/Louchatfroff). You can redistribute it and modify it under the terms of the [GNU General Public License, version 3](LICENSE). It comes with no warranty.
