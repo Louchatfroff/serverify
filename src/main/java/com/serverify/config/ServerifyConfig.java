@@ -11,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/** User settings, stored as JSON next to the other Fabric configs. Plain mutable fields so the GUI can flip them. */
 public final class ServerifyConfig {
 	public static final int MIN_REFRESH_SECONDS = 30;
 	public static final int MAX_REFRESH_SECONDS = 60;

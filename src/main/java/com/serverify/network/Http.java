@@ -12,7 +12,6 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-/** Shared async HTTP GET with a timeout and a single retry. Never blocks the caller. */
 public final class Http {
 	private static final Duration TIMEOUT = Duration.ofSeconds(10);
 	private static final HttpClient CLIENT = HttpClient.newBuilder()

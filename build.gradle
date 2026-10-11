@@ -9,13 +9,12 @@ plugins {
 }
 
 repositories {
-	maven { url = 'https://maven.terraformersmc.com/' } // Mod Menu
-	maven { url = 'https://maven.dediamondpro.dev/releases' } // Elementa (DIAMOND build)
-	maven { url = 'https://repo.essential.gg/repository/maven-public/' } // UniversalCraft
+	maven { url = 'https://maven.terraformersmc.com/' }
+	maven { url = 'https://maven.dediamondpro.dev/releases' }
+	maven { url = 'https://repo.essential.gg/repository/maven-public/' }
 }
 
 configurations {
-	// Libraries copied into the mod jar (and relocated, see shadowJar).
 	shade
 	implementation.extendsFrom shade
 }
@@ -81,7 +80,6 @@ tasks.withType(JavaCompile).configureEach {
 kotlin {
 	compilerOptions {
 		jvmTarget = JvmTarget.JVM_25
-		// Fabric Language Kotlin ships Kotlin 2.0 at the minimum version we support.
 		apiVersion = KotlinVersion.KOTLIN_2_0
 	}
 }
@@ -96,8 +94,6 @@ jar {
 	enabled = false
 }
 
-// The shaded jar is the one we ship. Elementa and UniversalCraft are relocated so they cannot clash with
-// the copies bundled by other mods.
 shadowJar {
 	archiveClassifier = ""
 	configurations = [project.configurations.shade]

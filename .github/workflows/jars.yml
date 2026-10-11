@@ -1,6 +1,5 @@
 name: Build jars
 
-# Reusable: builds and tests one jar per entry in .github/versions.json.
 on:
   workflow_call:
     inputs:

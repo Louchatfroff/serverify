@@ -7,7 +7,6 @@ const REVALIDATE_SECONDS = 300;
 
 const byVersionDesc = (a, b) => b.mc.localeCompare(a.mc, undefined, { numeric: true });
 
-/** Latest release as { tag, downloads: [{ mc, url, size }] }; null when there is no release yet. */
 export async function getLatestRelease() {
   try {
     const res = await fetch(`${API}/repos/${REPO}/releases/latest`, {

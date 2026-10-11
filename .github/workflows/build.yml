@@ -12,7 +12,6 @@ jobs:
   jars:
     uses: ./.github/workflows/jars.yml
 
-  # Weekly: does the newest Minecraft release still build? Fails (and emails) if the game API moved.
   latest:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest

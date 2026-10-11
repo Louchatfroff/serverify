@@ -12,12 +12,10 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 
-/** Bridges a listed server to vanilla's server list and connect flow. */
 public final class MultiplayerIntegration {
 	private MultiplayerIntegration() {
 	}
 
-	/** @return false when the address was already in the player's list */
 	public static boolean addToList(Minecraft minecraft, ServerEntry entry) {
 		ServerList list = new ServerList(minecraft);
 		list.load();
@@ -29,7 +27,6 @@ public final class MultiplayerIntegration {
 		return true;
 	}
 
-	/** Connects right away without saving the server. */
 	public static void join(Minecraft minecraft, Screen parent, ServerEntry entry) {
 		ConnectScreen.startConnecting(parent, minecraft, ServerAddress.parseString(entry.address()), serverData(entry), false, null);
 	}

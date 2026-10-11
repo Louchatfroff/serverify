@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Favorite servers, kept in a small JSON file and written on every change. */
 public final class Favorites {
 	private static final System.Logger LOG = System.getLogger("serverify");
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -48,7 +47,6 @@ public final class Favorites {
 		return byKey.containsKey(entry.key());
 	}
 
-	/** @return true if the server is a favorite after the call */
 	public synchronized boolean toggle(ServerEntry entry) {
 		boolean nowFavorite = byKey.remove(entry.key()) == null;
 		if (nowFavorite) {

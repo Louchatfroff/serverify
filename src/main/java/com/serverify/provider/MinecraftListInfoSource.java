@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-/** Primary source: minecraft-list.info's keyless JSON API (20 servers per page). */
 public final class MinecraftListInfoSource implements ServerSource {
 	private static final String BASE = "https://minecraft-list.info";
 

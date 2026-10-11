@@ -6,7 +6,6 @@ package com.serverify.model;
 import java.util.List;
 import java.util.Locale;
 
-/** One public server as shown on a browser card. Immutable. */
 public record ServerEntry(
 		String host,
 		int port,
@@ -24,7 +23,6 @@ public record ServerEntry(
 
 	public static final int DEFAULT_PORT = 25565;
 
-	/** Dedupe identity: lowercase host without trailing dot, plus port. */
 	public String key() {
 		String h = host.toLowerCase(Locale.ROOT);
 		if (h.endsWith(".")) {
@@ -33,7 +31,6 @@ public record ServerEntry(
 		return h + ":" + port;
 	}
 
-	/** Address as typed into Minecraft's server field (port omitted when default). */
 	public String address() {
 		return port == DEFAULT_PORT ? host : host + ":" + port;
 	}

@@ -14,11 +14,9 @@ import net.minecraft.util.Util;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-/** Pings one server with vanilla's own status protocol. Call {@link #tick()} every client tick. */
 public final class LivePing implements AutoCloseable {
 	private static final int TIMEOUT_SECONDS = 10;
 
-	/** Result of one ping. {@code pingMs} is the round trip; {@code motd} is the server's current message. */
 	public record Result(boolean online, int players, int maxPlayers, String version, long pingMs, Component motd) {
 	}
 

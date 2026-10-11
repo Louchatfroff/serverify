@@ -5,11 +5,6 @@ package com.serverify.model;
 
 import java.util.Locale;
 
-/**
- * Browser category tabs. Each source has its own slug for a category; a null slug means that
- * source has no such page, and minecraft-list.info then falls back to a name search for
- * {@link #nameTerm()}.
- */
 public enum Category {
 	SURVIVAL("survival", "survival"),
 	SMP(null, "smp"),
@@ -57,7 +52,6 @@ public enum Category {
 		return name().toLowerCase(Locale.ROOT);
 	}
 
-	/** Translation key, e.g. {@code serverify.category.skyblock}. */
 	public String translationKey() {
 		return "serverify.category." + nameTerm();
 	}

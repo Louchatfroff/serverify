@@ -27,10 +27,6 @@ public final class ServerifyClient implements ClientModInitializer {
 	public static Favorites favorites;
 	public static ServerifyConfig config;
 
-	/**
-	 * Enabled sources in load order: minecraft-list.info first, so it loads first and wins when a
-	 * scraped site lists the same server.
-	 */
 	public static ServerSourceRegistry sources() {
 		List<ServerSource> enabled = new ArrayList<>();
 		if (config.minecraftListInfoEnabled) {

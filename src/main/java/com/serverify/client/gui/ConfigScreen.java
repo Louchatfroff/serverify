@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-/** Settings page opened from Mod Menu. Every change is saved immediately. */
 public final class ConfigScreen extends Screen {
 	private static final int ROW_WIDTH = 220;
 	private static final int ROW_HEIGHT = 20;

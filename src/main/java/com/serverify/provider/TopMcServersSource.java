@@ -16,11 +16,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Scraped source: top-mc-servers.net's public vote ranking pages (robots.txt allows them).
- * ponytail: only the default vote ranking is scraped, so other sorts and text queries return
- * nothing; add its /type/ and /search pages when those are needed.
- */
 public final class TopMcServersSource implements ServerSource {
 	private static final String BASE = "https://top-mc-servers.net";
 

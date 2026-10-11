@@ -12,11 +12,6 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-/**
- * Loads sources one after another in list order (first = primary) and hands each source's
- * results to the caller as soon as they arrive. A server already in {@code seen} is dropped,
- * so the same server never shows twice and earlier sources win over later ones.
- */
 public final class ServerSourceRegistry {
 	private static final System.Logger LOG = System.getLogger("serverify");
 
@@ -26,10 +21,6 @@ public final class ServerSourceRegistry {
 		this.sources = List.copyOf(sources);
 	}
 
-	/**
-	 * @param seen owned by the caller (one per query); keep it across pages, clear it on a new query
-	 * @param onBatch called on a background thread, once per source, only with unseen servers
-	 */
 	public CompletableFuture<Void> load(Sort sort, String query, Category category, int page, Set<String> seen,
 			Consumer<List<ServerEntry>> onBatch) {
 		CompletableFuture<Void> chain = CompletableFuture.completedFuture(null);
