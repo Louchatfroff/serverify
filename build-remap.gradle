@@ -1,0 +1,68 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
+	id 'com.gradleup.shadow' version "${shadow_version}"
+	id 'maven-publish'
+}
+
+configurations {
+	shade
+	implementation.extendsFrom shade
+	shadeMod
+	modImplementation.extendsFrom shadeMod
+}
+
+apply from: 'gradle/common.gradle'
+
+kotlin {
+	compilerOptions {
+		jvmTarget = JvmTarget.fromTarget(project.java_version)
+		apiVersion = KotlinVersion.KOTLIN_2_0
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}"
+
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+	shadeMod("gg.essential:universalcraft-${project.universalcraft_version}-fabric:${project.universalcraft_build}") { transitive = false }
+	shadeMod("gg.essential:elementa:${project.elementa_version}") { transitive = false }
+
+	productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}"
+}
+
+jar {
+	archiveClassifier = "dev"
+}
+
+shadowJar {
+	archiveClassifier = "dev-shadow"
+	configurations = [project.configurations.shade, project.configurations.shadeMod]
+}
+
+remapJar {
+	dependsOn shadowJar
+	inputFile = shadowJar.archiveFile
+}
+
+tasks.register('remapGametestJar', net.fabricmc.loom.task.RemapJarTask) {
+	dependsOn tasks.named('gametestJar')
+	inputFile = tasks.named('gametestJar').flatMap { it.archiveFile }
+	archiveClassifier = "gametest-remapped"
+}
+
+tasks.register('runProductionClientGameTest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
+	dependsOn remapJar, remapGametestJar
+	mods.from(remapJar.archiveFile, remapGametestJar.archiveFile)
+	jvmArgs.add("-Dfabric.client.gametest")
+	jvmArgs.add("-Dfabric.client.gametest.disableNetworkSynchronizer=true")
+}

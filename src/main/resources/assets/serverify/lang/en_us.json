@@ -43,6 +43,7 @@
   "serverify.config.source.listinfo": "minecraft-list.info: %s",
   "serverify.config.source.topmc": "top-mc-servers.net (scraped): %s",
   "serverify.config.refresh": "Status refresh: every %s s",
+  "serverify.config.done": "Done",
   "serverify.category.survival": "Survival",
   "serverify.category.smp": "SMP",
   "serverify.category.vanilla": "Vanilla",

@@ -10,3 +10,7 @@ pluginManagement {
 }
 
 rootProject.name = 'serverify'
+
+if (providers.gradleProperty('obfuscated').getOrElse('false') == 'true') {
+	rootProject.buildFileName = 'build-remap.gradle'
+}

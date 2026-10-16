@@ -8,31 +8,17 @@ plugins {
 	id 'maven-publish'
 }
 
-repositories {
-	maven { url = 'https://maven.terraformersmc.com/' }
-	maven { url = 'https://maven.dediamondpro.dev/releases' }
-	maven { url = 'https://repo.essential.gg/repository/maven-public/' }
-}
-
 configurations {
 	shade
 	implementation.extendsFrom shade
 }
 
-loom {
-	mods {
-		"serverify" {
-			sourceSet sourceSets.main
-		}
-	}
-}
+apply from: 'gradle/common.gradle'
 
-fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "serverify-test"
-		enableGameTests = false
-		enableClientGameTests = true
+kotlin {
+	compilerOptions {
+		jvmTarget = JvmTarget.fromTarget(project.java_version)
+		apiVersion = KotlinVersion.KOTLIN_2_0
 	}
 }
 
@@ -46,48 +32,9 @@ dependencies {
 
 	shade("gg.essential:universalcraft-${project.universalcraft_version}-fabric:${project.universalcraft_build}") { transitive = false }
 	shade("gg.essential:elementa:${project.elementa_version}") { transitive = false }
-	shade "org.jsoup:jsoup:${project.jsoup_version}"
 
 	productionRuntimeMods "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 	productionRuntimeMods "net.fabricmc:fabric-language-kotlin:${project.fabric_language_kotlin_version}"
-
-	testImplementation platform("org.junit:junit-bom:${project.junit_version}")
-	testImplementation "org.junit.jupiter:junit-jupiter"
-	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
-}
-
-test {
-	useJUnitPlatform()
-}
-
-base {
-	archivesName = "serverify-mc${project.minecraft_version}"
-}
-
-processResources {
-	def props = [version: project.version, minecraft_range: project.minecraft_range]
-	inputs.properties props
-
-	filesMatching("fabric.mod.json") {
-		expand props
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-}
-
-kotlin {
-	compilerOptions {
-		jvmTarget = JvmTarget.JVM_25
-		apiVersion = KotlinVersion.KOTLIN_2_0
-	}
-}
-
-java {
-	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -97,24 +44,9 @@ jar {
 shadowJar {
 	archiveClassifier = ""
 	configurations = [project.configurations.shade]
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-	mergeServiceFiles()
-	relocate "gg.essential.universal", "com.serverify.libs.universal"
-	relocate "gg.essential.elementa", "com.serverify.libs.elementa"
-	relocate "org.jsoup", "com.serverify.libs.jsoup"
-
-	def projectName = project.name
-	from("LICENSE") {
-		rename { "${it}_$projectName" }
-	}
 }
 
 tasks.build.dependsOn shadowJar
-
-tasks.register('gametestJar', Jar) {
-	archiveClassifier = "gametest"
-	from sourceSets.gametest.output
-}
 
 tasks.register('runProductionClientGameTest', net.fabricmc.loom.task.prod.ClientProductionRunTask) {
 	dependsOn shadowJar, tasks.named('gametestJar')

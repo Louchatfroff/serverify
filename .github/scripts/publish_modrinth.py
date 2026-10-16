@@ -8,6 +8,7 @@ import sys
 import urllib.error
 import urllib.request
 import uuid
+import zipfile
 from pathlib import Path
 
 API = "https://api.modrinth.com/v2"
@@ -33,6 +34,28 @@ def call(method, path, token=None, data=None, content_type=None):
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf8", "replace")[:500]
         sys.exit(f"Modrinth {method} {path} failed with HTTP {error.code}: {detail}")
+
+
+def parse(version):
+    return tuple(int(part) for part in version.split("."))
+
+
+def in_range(version, expression):
+    value = parse(version)
+    for clause in expression.split():
+        match = re.match(r"^(>=|<=|<|>|=)?(\d+(?:\.\d+)*)$", clause)
+        operator, bound = match.group(1) or "=", parse(match.group(2))
+        width = max(len(value), len(bound))
+        v, b = value + (0,) * (width - len(value)), bound + (0,) * (width - len(bound))
+        if not {"=": v == b, ">=": v >= b, "<=": v <= b, "<": v < b, ">": v > b}[operator]:
+            return False
+    return True
+
+
+def supported_versions(jar, releases):
+    with zipfile.ZipFile(jar) as archive:
+        expression = json.loads(archive.read("fabric.mod.json"))["depends"]["minecraft"]
+    return [v for v in releases if re.fullmatch(r"\d+(?:\.\d+)*", v) and in_range(v, expression)]
 
 
 def multipart(data, jar):
@@ -72,7 +95,7 @@ def main():
         if not match:
             continue
         minecraft, mod_version = match.groups()
-        game_versions = [v for v in releases if v == minecraft or v.startswith(minecraft + ".")]
+        game_versions = supported_versions(jar, releases)
         version_number = f"{mod_version}+mc{minecraft}"
         if not game_versions:
             print(f"skipping {jar.name}: Modrinth does not list Minecraft {minecraft} yet")

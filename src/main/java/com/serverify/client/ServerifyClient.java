@@ -13,7 +13,6 @@ import com.serverify.provider.TopMcServersSource;
 import gg.essential.universal.UScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
@@ -45,7 +44,7 @@ public final class ServerifyClient implements ClientModInitializer {
 		favorites = new Favorites(dir.resolve("serverify").resolve("favorites.json"));
 		ScreenEvents.AFTER_INIT.register((minecraft, screen, width, height) -> {
 			if (screen instanceof JoinMultiplayerScreen) {
-				Screens.getWidgets(screen).add(Button
+				ScreenWidgets.of(screen).add(Button
 						.builder(Component.translatable("serverify.open"), button -> UScreen.displayScreen(new ServerBrowserScreen()))
 						.bounds(width - 108, 6, 100, 20)
 						.build());

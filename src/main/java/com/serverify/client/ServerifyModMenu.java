@@ -3,7 +3,7 @@
 
 package com.serverify.client;
 
-import com.serverify.client.gui.ConfigScreen;
+import com.serverify.gui.ConfigScreen;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 

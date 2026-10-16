@@ -4,7 +4,7 @@
 package com.serverify.gametest;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.serverify.client.gui.ConfigScreen;
+import com.serverify.gui.ConfigScreen;
 import com.serverify.gui.ServerBrowserScreen;
 import com.serverify.gui.ServerScreen;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
