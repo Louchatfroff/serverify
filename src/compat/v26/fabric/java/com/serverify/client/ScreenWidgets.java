@@ -14,6 +14,6 @@ final class ScreenWidgets {
 	}
 
 	static List<AbstractWidget> of(Screen screen) {
-		return Screens.getWidgets(screen);
+		return (screen);
 	}
 }
