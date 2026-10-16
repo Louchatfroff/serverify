@@ -14,7 +14,7 @@ import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 
-import java.util.List;
+import java.util.Collections;
 
 public final class ServerifySmokeTest implements ClientModInitializer {
 	private int tick;
@@ -26,18 +26,24 @@ public final class ServerifySmokeTest implements ClientModInitializer {
 
 	private void onTick(Minecraft mc) {
 		tick++;
-		switch (tick) {
-			case 250 -> mc.setScreen(new JoinMultiplayerScreen(new TitleScreen()));
-			case 270 -> shot(mc, "1-multiplayer");
-			case 280 -> mc.setScreen(new ServerBrowserScreen());
-			case 600 -> shot(mc, "2-browser");
-			case 610 -> mc.setScreen(new ServerScreen(new ServerEntry("mc.hypixel.net", 25565, "Hypixel", "Smoke test", true, 1, 2, "1.21", "US", 0, "", List.of("minigames"), "smoke")));
-			case 800 -> shot(mc, "3-detail");
-			case 810 -> mc.setScreen(new ConfigScreen(new TitleScreen()));
-			case 830 -> shot(mc, "4-settings");
-			case 850 -> mc.stop();
-			default -> {
-			}
+		if (tick == 250) {
+			mc.setScreen(new JoinMultiplayerScreen(new TitleScreen()));
+		} else if (tick == 270) {
+			shot(mc, "1-multiplayer");
+		} else if (tick == 280) {
+			mc.setScreen(new ServerBrowserScreen());
+		} else if (tick == 600) {
+			shot(mc, "2-browser");
+		} else if (tick == 610) {
+			mc.setScreen(new ServerScreen(new ServerEntry("2b2t.org", 25565, "2b2t", "Smoke test", true, 1, 2, "1.21", "US", 0, "", Collections.singletonList("minigames"), "smoke")));
+		} else if (tick == 800) {
+			shot(mc, "3-detail");
+		} else if (tick == 810) {
+			mc.setScreen(new ConfigScreen(new TitleScreen()));
+		} else if (tick == 830) {
+			shot(mc, "4-settings");
+		} else if (tick == 850) {
+			mc.stop();
 		}
 	}
 

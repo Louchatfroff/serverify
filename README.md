@@ -3,9 +3,9 @@
 [![Build](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml/badge.svg)](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/Louchatfroff/serverify)](https://github.com/Louchatfroff/serverify/releases/latest)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
-![Minecraft](https://img.shields.io/badge/minecraft-26.1%20%7C%2026.2%20%7C%2026.3-62b47a)
+![Minecraft](https://img.shields.io/badge/minecraft-1.16.5%20to%2026.3-62b47a)
 
-A client-side [Fabric](https://fabricmc.net) mod that adds a fast, native **server browser** to Minecraft's Multiplayer screen. Search, filter, check live status and join, without leaving the game.
+A client-side mod for [Fabric](https://fabricmc.net), Quilt, [Forge](https://minecraftforge.net) and [NeoForge](https://neoforged.net) that adds a fast, native **server browser** to Minecraft's Multiplayer screen. Search, filter, check live status and join, without leaving the game.
 
 **Website and downloads: <https://serverify.louchat.site/>**
 
@@ -27,41 +27,38 @@ A client-side [Fabric](https://fabricmc.net) mod that adds a fast, native **serv
 
 ## Install
 
-1. Install [Fabric Loader](https://fabricmc.net/use/installer/) for your Minecraft version.
-2. Download [Fabric API](https://modrinth.com/mod/fabric-api) and [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin) for the same version.
-3. Download the Serverify jar for your version from the [latest release](https://github.com/Louchatfroff/serverify/releases/latest).
-4. Put all three jars in `.minecraft/mods`.
+1. Install the mod loader for your Minecraft version: [Fabric](https://fabricmc.net/use/installer/) (Quilt also works), [Forge](https://files.minecraftforge.net/) or [NeoForge](https://neoforged.net/).
+2. On Fabric or Quilt, also download [Fabric API](https://modrinth.com/mod/fabric-api) and [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin). Forge and NeoForge need nothing else.
+3. Download the Serverify jar for your loader and version from the [latest release](https://github.com/Louchatfroff/serverify/releases/latest).
+4. Put the jars in `.minecraft/mods`.
 5. Start the game, open **Multiplayer** and press the **Serverify** button.
 
-| Minecraft | Jar |
-| --- | --- |
-| 26.1, 26.1.1, 26.1.2 | `serverify-mc26.1-<version>.jar` |
-| 26.2 | `serverify-mc26.2-<version>.jar` |
-| 26.3 | `serverify-mc26.3-<version>.jar` |
+Jars are named `serverify-<loader>-mc<version>-<release>.jar`. Each one covers the range of Minecraft versions in `.github/versions.json`.
 
-Requires Java 25, which the official launcher installs for these versions. Mod Menu is optional.
+| Loader | Minecraft versions |
+| --- | --- |
+| Fabric and Quilt | 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1, 26.2, 26.3 |
+| Forge | 1.17.1, 1.19.2, 1.19.4, 1.20.1 |
+| NeoForge | 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.5 |
+
+Java 8 runs 1.16.5, Java 16 runs 1.17, Java 17 runs 1.18 to 1.20.4, Java 21 runs 1.20.5 to 1.21.11 and Java 25 runs 26.x. Mod Menu is optional on Fabric. Quilt loads the Fabric jars and has not been tested separately.
 
 ## Build from source
 
-You need JDK 25.
+You need JDK 25 to run Gradle. The build targets the right Java version for each Minecraft version.
 
 ```bash
 ./gradlew build
 ```
 
-The jar is written to `build/libs/`. Build for another Minecraft version by passing the values from [`.github/versions.json`](.github/versions.json):
+The jar is written to `build/libs/`. Build another loader or Minecraft version by passing every value of its entry in [`.github/versions.json`](.github/versions.json) as a Gradle property, which is what CI does:
 
 ```bash
-./gradlew build -Pminecraft_version=26.3 -Pfabric_api_version=0.162.0+26.3 -Puniversalcraft_version=26.3 "-Pminecraft_range=>=26.3 <26.4"
+jq -r '.[] | select(.name == "forge-1.20.1") | del(.name, .publish) | to_entries[] | "-P\(.key)=\(.value)"' .github/versions.json \
+  | xargs ./gradlew build
 ```
 
-Run the game with the mod, or run the scripted in-game tests that save screenshots. `runClientGameTest` uses the project classes, `runProductionClientGameTest` launches the real shaded jar:
-
-```bash
-./gradlew runClient
-./gradlew runClientGameTest
-./gradlew runProductionClientGameTest
-```
+Fabric builds run the scripted in-game tests that save screenshots. `runProductionClientGameTest` launches the real remapped jar. Add `-Psmoke=true` on versions that predate Fabric's client game test API. Forge and NeoForge builds are checked in a development client with `runClient -Psmoke_main=true`, which opens each screen and saves screenshots.
 
 ## How it works
 
@@ -70,7 +67,9 @@ src/main/java/provider/    one ServerSource per site and a registry that loads t
 src/main/java/network/     async HTTP with timeout and retry
 src/main/java/favorites/   local JSON storage
 src/main/java/config/      settings stored in config/serverify.json
-src/main/java/client/      entrypoint, Mod Menu hook, live ping and the Multiplayer integration
+src/main/java/Serverify.java  shared setup used by every loader
+src/loader/<loader>/      the entrypoint for Fabric, Forge, NeoForge
+src/compat/<generation>/  live ping, join and button code that differs between Minecraft versions
 src/main/kotlin/gui/       the interface, built with Elementa
 ```
 
@@ -78,11 +77,11 @@ The interface is written in Kotlin on [Elementa](https://github.com/EssentialGG/
 
 ### Adding a Minecraft version
 
-Add an entry to [`.github/versions.json`](.github/versions.json) with the Minecraft version, the matching Fabric API version, the UniversalCraft version and the version range. CI builds and releases it automatically.
+Add an entry to [`.github/versions.json`](.github/versions.json) with the loader, the Minecraft version, the loader version, the UniversalCraft version, the compat generation and the version range. Entries with `"publish": true` are released.
 
 ## Releases
 
-Pushing a tag such as `v0.2.0` builds a jar for every version in `versions.json` and publishes them to GitHub Releases.
+Pushing a tag such as `v0.3.0` builds the jars marked `"publish": true` in `versions.json`, publishes them to GitHub Releases with the notes from `CHANGELOG.md`, and uploads them to Modrinth.
 
 ## Notes
 

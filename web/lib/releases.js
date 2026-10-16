@@ -2,7 +2,7 @@ export const REPO = process.env.GITHUB_REPO ?? "Louchatfroff/serverify";
 const API = process.env.GITHUB_API ?? "https://api.github.com";
 export const REPO_URL = `https://github.com/${REPO}`;
 
-const ASSET = /^serverify-mc(.+?)-\d[^/]*(?<!-sources)\.jar$/;
+const ASSET = /^serverify-(fabric|forge|neoforge)-mc(.+?)-\d[^/]*(?<!-sources)\.jar$/;
 const REVALIDATE_SECONDS = 300;
 
 const byVersionDesc = (a, b) => b.mc.localeCompare(a.mc, undefined, { numeric: true });
@@ -18,7 +18,7 @@ export async function getLatestRelease() {
     const downloads = release.assets
       .map((asset) => {
         const match = ASSET.exec(asset.name);
-        return match && { mc: match[1], url: asset.browser_download_url, size: asset.size };
+        return match && { loader: match[1], mc: match[2], url: asset.browser_download_url, size: asset.size };
       })
       .filter(Boolean)
       .sort(byVersionDesc);

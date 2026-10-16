@@ -1,0 +1,21 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "GPL-3.0-only"
+issueTrackerURL = "https://github.com/Louchatfroff/serverify/issues"
+showAsResourcePack = false
+
+[[mods]]
+modId = "serverify"
+version = "${version}"
+displayName = "Serverify"
+authors = "Louchatfroff"
+description = "In-game Minecraft server browser."
+displayURL = "https://serverify.louchat.site"
+displayTest = "IGNORE_ALL_VERSION"
+
+[[dependencies.serverify]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${forge_mc_range}"
+ordering = "NONE"
+side = "CLIENT"

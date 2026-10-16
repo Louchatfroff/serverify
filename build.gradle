@@ -14,11 +14,13 @@ configurations {
 }
 
 apply from: 'gradle/common.gradle'
+apply from: 'gradle/fabric.gradle'
 
 kotlin {
 	compilerOptions {
-		jvmTarget = JvmTarget.fromTarget(project.java_version)
+		jvmTarget = JvmTarget.fromTarget(project.java_version == '8' ? '1.8' : project.java_version)
 		apiVersion = KotlinVersion.KOTLIN_2_0
+		freeCompilerArgs.add("-Xjdk-release=" + (project.java_version == '8' ? '1.8' : project.java_version))
 	}
 }
 

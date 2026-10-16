@@ -21,6 +21,7 @@ jobs:
   build:
     needs: matrix
     runs-on: ubuntu-latest
+    continue-on-error: ${{ !matrix.publish }}
     strategy:
       fail-fast: false
       matrix:
@@ -32,26 +33,20 @@ jobs:
           distribution: temurin
           java-version: 25
       - uses: gradle/actions/setup-gradle@v4
-      - name: Build and test for Minecraft ${{ matrix.minecraft }}
+      - name: Build and test ${{ matrix.name }}
         env:
           MOD_VERSION: ${{ inputs.version }}
+          ENTRY: ${{ toJSON(matrix) }}
         run: |
           VERSION="${MOD_VERSION#v}"
-          ./gradlew build --no-daemon \
-            -Pminecraft_version="${{ matrix.minecraft }}" \
-            -Pfabric_api_version="${{ matrix.fabric_api }}" \
-            -Pmodmenu_version="${{ matrix.modmenu }}" \
-            -Puniversalcraft_version="${{ matrix.universalcraft }}" \
-            -Pjava_version="${{ matrix.java }}" \
-            -Pcompat="${{ matrix.compat }}" \
-            -Pobfuscated="${{ matrix.obfuscated }}" \
-            "-Pminecraft_range=${{ matrix.range }}" \
-            ${VERSION:+-Pversion="$VERSION"}
+          mapfile -t ARGS < <(echo "$ENTRY" | jq -r 'del(.name, .publish) | to_entries[] | "-P" + .key + "=" + (.value | tostring)')
+          ./gradlew build --no-daemon "${ARGS[@]}" ${VERSION:+-Pversion="$VERSION"}
       - uses: actions/upload-artifact@v4
+        if: matrix.publish
         with:
-          name: serverify-mc${{ matrix.minecraft }}
+          name: serverify-${{ matrix.name }}
           path: |
-            build/libs/serverify-mc*.jar
+            build/libs/serverify-*.jar
             !build/libs/*-sources.jar
             !build/libs/*-gametest*.jar
             !build/libs/*-dev*.jar

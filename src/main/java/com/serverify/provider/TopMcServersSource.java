@@ -26,9 +26,9 @@ public final class TopMcServersSource implements ServerSource {
 
 	@Override
 	public CompletableFuture<List<ServerEntry>> list(Sort sort, String query, Category category, int page) {
-		if (sort != Sort.POPULAR || (query != null && !query.isBlank())
+		if (sort != Sort.POPULAR || (query != null && !query.trim().isEmpty())
 				|| (category != null && category.topMcSlug() == null)) {
-			return CompletableFuture.completedFuture(List.of());
+			return CompletableFuture.completedFuture(java.util.Collections.emptyList());
 		}
 		String url;
 		if (category != null) {
@@ -47,7 +47,7 @@ public final class TopMcServersSource implements ServerSource {
 			if (ipButton == null) {
 				continue;
 			}
-			String address = ipButton.attr("data-ip").strip();
+			String address = ipButton.attr("data-ip").trim();
 			String host = address;
 			int port = ServerEntry.DEFAULT_PORT;
 			int colon = address.lastIndexOf(':');
@@ -73,7 +73,7 @@ public final class TopMcServersSource implements ServerSource {
 					flag == null ? "" : flag.attr("alt"),
 					digits(text(card, ".server-stats-metric-value--votes")),
 					icon == null ? "" : icon.absUrl("src"),
-					List.copyOf(tags),
+					new ArrayList<>(tags),
 					"top-mc-servers.net"));
 		}
 		return out;
@@ -81,7 +81,7 @@ public final class TopMcServersSource implements ServerSource {
 
 	private static String text(Element root, String selector) {
 		Element e = root.selectFirst(selector);
-		return e == null ? "" : e.text().strip();
+		return e == null ? "" : e.text().trim();
 	}
 
 	private static int digits(String s) {

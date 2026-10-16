@@ -2,6 +2,9 @@ repositories {
 	maven { url = 'https://maven.terraformersmc.com/' }
 	maven { url = 'https://maven.dediamondpro.dev/releases' }
 	maven { url = 'https://repo.essential.gg/repository/maven-public/' }
+	maven { url = 'https://maven.minecraftforge.net' }
+	maven { url = 'https://maven.neoforged.net/releases/' }
+	maven { url = 'https://thedarkcolour.github.io/KotlinForForge/' }
 }
 
 loom {
@@ -12,16 +15,11 @@ loom {
 	}
 }
 
-fabricApi {
-	configureTests {
-		createSourceSet = true
-		modId = "serverify-test"
-		enableGameTests = false
-		enableClientGameTests = true
-	}
-}
+sourceSets.main.java.srcDirs "src/compat/${project.compat}/java", "src/loader/${project.findProperty("loader_dir") ?: project.loader}/java", "src/compat/${project.compat}/${project.loader}/java"
 
-sourceSets.main.java.srcDir "src/compat/${project.compat}/java"
+if (project.findProperty('smoke_main')) {
+	sourceSets.main.java.srcDirs "src/smoke-main${project.findProperty('smoke_main') == 'true' ? '' : project.findProperty('smoke_main')}/java"
+}
 
 dependencies {
 	shade "org.jsoup:jsoup:${project.jsoup_version}"
@@ -36,20 +34,35 @@ test {
 }
 
 base {
-	archivesName = "serverify-mc${project.minecraft_version}"
+	archivesName = "serverify-${project.loader}-mc${project.minecraft_version}"
 }
 
 processResources {
-	def props = [version: project.version, minecraft_range: project.minecraft_range, java_version: project.java_version]
+	def props = [version: project.version, minecraft_range: project.minecraft_range, java_version: project.java_version,
+				 fabric_api_id: project.fabric_api_id, forge_mc_range: project.findProperty('forge_mc_range') ?: '',
+				 neoforge_range: project.findProperty("neoforge_range") ?: "[1,)", pack_fields: ((project.findProperty("pack_format") ?: "15") as int) >= 65 ? "\"min_format\": ${project.findProperty("pack_format")}, \"max_format\": ${project.findProperty("pack_format")}" : "\"pack_format\": ${project.findProperty("pack_format") ?: "15"}"]
 	inputs.properties props
 
-	filesMatching("fabric.mod.json") {
+	filesMatching(["fabric.mod.json", "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "pack.mcmeta"]) {
 		expand props
+	}
+	if (project.loader != 'fabric') exclude "fabric.mod.json"
+	if (project.loader == 'neoforge' && project.findProperty('neo_legacy_toml')) {
+		filesMatching("META-INF/neoforge.mods.toml") {
+			path = "META-INF/mods.toml"
+		}
+	}
+	if (project.loader == 'fabric') {
+		exclude "META-INF/mods.toml", "META-INF/neoforge.mods.toml", "pack.mcmeta"
+	} else if (project.loader == 'forge') {
+		exclude "META-INF/neoforge.mods.toml"
+	} else {
+		exclude "META-INF/mods.toml"
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = project.java_version as int
+	it.options.release = (project.java_version as int)
 }
 
 java {
@@ -64,6 +77,12 @@ shadowJar {
 	relocate "gg.essential.universal", "com.serverify.libs.universal"
 	relocate "gg.essential.elementa", "com.serverify.libs.elementa"
 	relocate "org.jsoup", "com.serverify.libs.jsoup"
+	if (project.loader != 'fabric') exclude "fabric.mod.json"
+	if (project.loader == 'neoforge' && project.findProperty('neo_legacy_toml')) {
+		filesMatching("META-INF/neoforge.mods.toml") {
+			path = "META-INF/mods.toml"
+		}
+	}
 
 	def projectName = project.name
 	from("LICENSE") {
@@ -71,12 +90,12 @@ shadowJar {
 	}
 }
 
-tasks.register('gametestJar', Jar) {
-	archiveClassifier = "gametest"
-	from sourceSets.gametest.output
+if (project.findProperty('run_jdk')) {
+	tasks.withType(JavaExec).configureEach {
+		executable = "${project.run_jdk}/bin/java.exe"
+	}
 }
 
-if (project.findProperty('smoke') == 'true') {
-	sourceSets.gametest.java.srcDirs = ['src/smoke/java']
-	sourceSets.gametest.resources.srcDirs = ['src/smoke/resources']
+tasks.named('compileTestJava') {
+	options.release = Math.max(17, project.java_version as int)
 }

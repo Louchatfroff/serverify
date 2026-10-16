@@ -25,7 +25,7 @@ export default async function Home() {
 
       <header className="hero">
         <h1>Find a Minecraft server. Join it.</h1>
-        <p>Serverify is a Fabric mod that adds a fast, native server browser to the Multiplayer screen.</p>
+        <p>Serverify is a client-side mod for Fabric, Quilt, Forge and NeoForge that adds a fast, native server browser to the Multiplayer screen.</p>
         <Download
           downloads={release?.downloads ?? []}
           tag={release?.tag}
@@ -57,13 +57,13 @@ export default async function Home() {
           <h2 id="install-title">Install</h2>
           <ol className="steps">
             <li>
-              Install <a href="https://fabricmc.net/use/installer/">Fabric Loader</a> for your Minecraft version.
+              Install your mod loader for your Minecraft version: <a href="https://fabricmc.net/use/installer/">Fabric</a> (Quilt also works), <a href="https://files.minecraftforge.net/">Forge</a> or <a href="https://neoforged.net/">NeoForge</a>.
             </li>
             <li>
-              Download <a href="https://modrinth.com/mod/fabric-api">Fabric API</a> and <a href="https://modrinth.com/mod/fabric-language-kotlin">Fabric Language Kotlin</a> for the same version.
+              On Fabric or Quilt, also download <a href="https://modrinth.com/mod/fabric-api">Fabric API</a> and <a href="https://modrinth.com/mod/fabric-language-kotlin">Fabric Language Kotlin</a> for the same version. Forge and NeoForge need nothing else.
             </li>
             <li>
-              Put all three files, including the Serverify download above, in your <code>.minecraft/mods</code> folder.
+              Put the Serverify download above, and the Fabric files if you use Fabric, in your <code>.minecraft/mods</code> folder.
             </li>
             <li>
               Start the game, open <strong>Multiplayer</strong> and press the <strong>Serverify</strong> button.

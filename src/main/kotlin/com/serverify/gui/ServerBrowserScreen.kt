@@ -18,7 +18,7 @@
 
 package com.serverify.gui
 
-import com.serverify.client.ServerifyClient
+import com.serverify.Serverify
 import com.serverify.model.Category
 import com.serverify.model.ServerEntry
 import com.serverify.provider.ServerSource.Sort
@@ -258,7 +258,7 @@ class ServerBrowserScreen : ServerifyScreen() {
         if (favoritesOnly) {
             hasMore = false
             val needle = query.lowercase(Locale.ROOT)
-            addCards(ServerifyClient.favorites.all().filter {
+            addCards(Serverify.favorites.all().filter {
                 (!onlineOnly || it.online()) && (needle.isEmpty() ||
                         it.name().lowercase(Locale.ROOT).contains(needle) ||
                         it.host().lowercase(Locale.ROOT).contains(needle))
@@ -270,7 +270,7 @@ class ServerBrowserScreen : ServerifyScreen() {
         rawAddedThisPage = 0
         updateStatus()
         val token = generation
-        ServerifyClient.sources().load(sort, query, category, ++page, seen) { batch ->
+        Serverify.sources().load(sort, query, category, ++page, seen) { batch ->
             Window.enqueueRenderOperation {
                 if (token != generation) return@enqueueRenderOperation
                 rawAddedThisPage += batch.size

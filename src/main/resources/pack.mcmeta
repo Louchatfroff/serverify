@@ -1,0 +1,6 @@
+{
+  "pack": {
+    "description": "Serverify resources",
+    ${pack_fields}
+  }
+}

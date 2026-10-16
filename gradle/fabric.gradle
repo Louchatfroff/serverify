@@ -1,0 +1,19 @@
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "serverify-test"
+		enableGameTests = false
+		enableClientGameTests = true
+	}
+}
+
+tasks.register('gametestJar', Jar) {
+	archiveClassifier = "gametest"
+	from sourceSets.gametest.output
+}
+
+def smoke = project.findProperty('smoke')
+if (smoke) {
+	sourceSets.gametest.java.srcDirs = [smoke == 'true' ? 'src/smoke/java' : "src/smoke${smoke}/java"]
+	sourceSets.gametest.resources.srcDirs = ['src/smoke/resources']
+}

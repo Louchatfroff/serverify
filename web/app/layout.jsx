@@ -7,7 +7,7 @@ const mono = Inconsolata({ subsets: ["latin"], variable: "--font-mono", display:
 
 export const metadata = {
   title: "Serverify",
-  description: "Browse, search and join Minecraft servers without leaving the game. A Fabric mod.",
+  description: "Browse, search and join Minecraft servers without leaving the game. A client-side mod for Fabric, Quilt, Forge and NeoForge.",
 };
 
 export default function RootLayout({ children }) {

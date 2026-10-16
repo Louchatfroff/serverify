@@ -3,8 +3,9 @@
 
 package com.serverify.gui
 
-import com.serverify.client.ServerifyClient
+import com.serverify.Serverify
 import com.serverify.config.ServerifyConfig
+import com.serverify.client.RenderMode
 import gg.essential.elementa.ElementaVersion
 import gg.essential.elementa.WindowScreen
 import gg.essential.elementa.components.UIBlock
@@ -30,8 +31,8 @@ class ConfigScreen(private val parent: Screen?) : WindowScreen(
     } childOf window
 
     init {
-        useElementaRenderer = true
-        val config = ServerifyClient.config
+        useElementaRenderer = RenderMode.EXTRACT
+        val config = Serverify.config
 
         UIText("serverify.config.title".localize()).constrain {
             x = CenterConstraint()
@@ -80,7 +81,7 @@ class ConfigScreen(private val parent: Screen?) : WindowScreen(
             if (it.mouseButton != 0) return@onMouseClick
             action()
             text.setText(label())
-            if (save) ServerifyClient.config.save()
+            if (save) Serverify.config.save()
         }
         text childOf block
     }

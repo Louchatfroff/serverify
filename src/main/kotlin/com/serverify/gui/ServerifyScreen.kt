@@ -18,6 +18,7 @@
 
 package com.serverify.gui
 
+import com.serverify.client.RenderMode
 import gg.essential.elementa.ElementaVersion
 import gg.essential.elementa.WindowScreen
 import gg.essential.universal.UKeyboard
@@ -36,7 +37,7 @@ abstract class ServerifyScreen(
     private var defaultScale = -1
 
     init {
-        useElementaRenderer = true
+        useElementaRenderer = RenderMode.EXTRACT
 
         if (!replacingScreen) {
             currentScreen?.let { backScreens.add(it) }

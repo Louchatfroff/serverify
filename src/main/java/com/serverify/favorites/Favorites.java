@@ -14,10 +14,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Map;
 
 public final class Favorites {
-	private static final System.Logger LOG = System.getLogger("serverify");
+	private static final Logger LOG = Logger.getLogger("serverify");
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	private final Path file;
@@ -27,7 +29,7 @@ public final class Favorites {
 		this.file = file;
 		try {
 			if (Files.exists(file)) {
-				ServerEntry[] saved = GSON.fromJson(Files.readString(file, StandardCharsets.UTF_8), ServerEntry[].class);
+				ServerEntry[] saved = GSON.fromJson(new String(Files.readAllBytes(file), StandardCharsets.UTF_8), ServerEntry[].class);
 				if (saved != null) {
 					for (ServerEntry e : saved) {
 						byKey.put(e.key(), e);
@@ -35,7 +37,7 @@ public final class Favorites {
 				}
 			}
 		} catch (IOException | RuntimeException e) {
-			LOG.log(System.Logger.Level.WARNING, "Could not read favorites, starting empty: " + e);
+			LOG.log(Level.WARNING, "Could not read favorites, starting empty: " + e);
 		}
 	}
 
@@ -59,9 +61,9 @@ public final class Favorites {
 	private void save() {
 		try {
 			Files.createDirectories(file.getParent());
-			Files.writeString(file, GSON.toJson(byKey.values()), StandardCharsets.UTF_8);
+			Files.write(file, GSON.toJson(byKey.values()).getBytes(StandardCharsets.UTF_8));
 		} catch (IOException e) {
-			LOG.log(System.Logger.Level.WARNING, "Could not save favorites: " + e);
+			LOG.log(Level.WARNING, "Could not save favorites: " + e);
 		}
 	}
 }

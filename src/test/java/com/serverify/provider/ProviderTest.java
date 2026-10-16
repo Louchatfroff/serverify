@@ -47,7 +47,7 @@ class ProviderTest {
 	void parsesMinecraftListInfo() throws IOException {
 		List<ServerEntry> servers = MinecraftListInfoSource.parse(resource("minecraft-list-info.json"));
 		assertEquals(3, servers.size());
-		ServerEntry first = servers.getFirst();
+		ServerEntry first = servers.get(0);
 		assertFalse(first.host().isEmpty());
 		assertTrue(first.port() > 0);
 		assertTrue(first.iconUrl().startsWith("https://minecraft-list.info/"));
@@ -57,7 +57,7 @@ class ProviderTest {
 	void parsesTopMcServersCards() throws IOException {
 		List<ServerEntry> servers = TopMcServersSource.parse(resource("top-mc-servers.html"), "https://top-mc-servers.net/");
 		assertEquals(2, servers.size());
-		ServerEntry first = servers.getFirst();
+		ServerEntry first = servers.get(0);
 		assertEquals("tm.cobblegalaxy.com", first.host());
 		assertEquals("CobbleGalaxy", first.name());
 		assertTrue(first.online());
@@ -99,7 +99,7 @@ class ProviderTest {
 		List<ServerEntry> servers = new MinecraftListInfoSource()
 				.list(Sort.PLAYERS, "", Category.SURVIVAL, 1).orTimeout(30, java.util.concurrent.TimeUnit.SECONDS).join();
 		assertFalse(servers.isEmpty());
-		assertFalse(servers.getFirst().host().isEmpty());
+		assertFalse(servers.get(0).host().isEmpty());
 	}
 
 	@Test

@@ -19,8 +19,9 @@
 package com.serverify.gui
 
 import com.serverify.client.LivePing
+import com.serverify.client.PingResult
 import com.serverify.client.MultiplayerIntegration
-import com.serverify.client.ServerifyClient
+import com.serverify.Serverify
 import com.serverify.model.ServerEntry
 import gg.essential.elementa.UIComponent
 import gg.essential.elementa.components.*
@@ -36,7 +37,7 @@ import kotlin.math.min
 
 class ServerScreen(private var entry: ServerEntry) : ServerifyScreen() {
     private val livePing = LivePing()
-    private var live: LivePing.Result? = null
+    private var live: PingResult? = null
     private var checking = false
     private var failed = false
     private var tickCounter = 0
@@ -313,14 +314,14 @@ class ServerScreen(private var entry: ServerEntry) : ServerifyScreen() {
             label.setText("serverify.detail.copied".localize())
         }
         actionButton(sideBox, favoriteLabel()) { label, _ ->
-            ServerifyClient.favorites.toggle(entry)
+            Serverify.favorites.toggle(entry)
             label.setText(favoriteLabel())
         }
         actionButton(sideBox, "serverify.detail.refresh".localize()) { _, _ -> refreshStatus() }
     }
 
     private fun favoriteLabel(): String =
-        (if (ServerifyClient.favorites.contains(entry)) "serverify.detail.unfavorite" else "serverify.detail.favorite").localize()
+        (if (Serverify.favorites.contains(entry)) "serverify.detail.unfavorite" else "serverify.detail.favorite").localize()
 
     private fun actionButton(
         parent: UIComponent,
@@ -381,7 +382,7 @@ class ServerScreen(private var entry: ServerEntry) : ServerifyScreen() {
     override fun onTick() {
         super.onTick()
         livePing.tick()
-        if (++tickCounter % (ServerifyClient.config.refreshSeconds * TICKS_PER_SECOND) == 0) refreshStatus()
+        if (++tickCounter % (Serverify.config.refreshSeconds * TICKS_PER_SECOND) == 0) refreshStatus()
     }
 
     override fun onScreenClose() {

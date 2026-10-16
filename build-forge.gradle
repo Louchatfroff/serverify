@@ -1,0 +1,92 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
+plugins {
+	id 'gg.essential.loom' version "${arch_loom_version}"
+	id 'org.jetbrains.kotlin.jvm' version "${kotlin_version}"
+	id 'com.gradleup.shadow' version "${shadow_version}"
+}
+
+def obfuscated = !project.hasProperty('fabric.loom.disableObfuscation')
+def isNeo = project.loader == "neoforge"
+
+configurations {
+	shade
+	implementation.extendsFrom shade
+	shadeMod
+	getByName(obfuscated ? 'modImplementation' : 'implementation').extendsFrom shadeMod
+}
+
+apply from: 'gradle/common.gradle'
+
+kotlin {
+	compilerOptions {
+		jvmTarget = JvmTarget.fromTarget(project.java_version == '8' ? '1.8' : project.java_version)
+		apiVersion = KotlinVersion.KOTLIN_2_0
+		freeCompilerArgs.add("-Xjdk-release=" + (project.java_version == '8' ? '1.8' : project.java_version))
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	if (obfuscated) {
+		mappings loom.officialMojangMappings()
+	}
+	if (isNeo) {
+		neoForge "net.neoforged:neoforge:${project.neoforge_version}"
+	} else {
+		forge "net.minecraftforge:forge:${project.forge_version}"
+	}
+
+	shade "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
+	forgeRuntimeLibrary "org.jetbrains.kotlin:kotlin-stdlib:${project.kotlin_version}"
+	forgeRuntimeLibrary "org.jsoup:jsoup:${project.jsoup_version}"
+	shadeMod("gg.essential:universalcraft-${project.universalcraft_version}-${project.loader}:${project.universalcraft_build}") { transitive = false }
+	shadeMod("gg.essential:elementa:${project.elementa_version}") { transitive = false }
+}
+
+configurations.configureEach {
+	resolutionStrategy.force "net.sf.jopt-simple:jopt-simple:5.0.4"
+	exclude group: "net.fabricmc", module: "fabric-log4j-util"
+}
+
+loom {
+	if (!isNeo) {
+		forge {
+		}
+	}
+	if (project.findProperty('smoke_main')) {
+		runConfigs.configureEach {
+			vmArg "-Dserverify.smoke=true"
+		}
+	}
+}
+
+jar {
+	if (obfuscated) {
+		archiveClassifier = "dev"
+	} else {
+		enabled = false
+	}
+}
+
+shadowJar {
+	archiveClassifier = obfuscated ? "dev-shadow" : ""
+	configurations = [project.configurations.shade, project.configurations.shadeMod]
+	relocate "kotlin", "com.serverify.libs.kotlin"
+	exclude "META-INF/versions/9/**"
+}
+
+if (obfuscated) {
+	remapJar {
+		dependsOn shadowJar
+		inputFile = shadowJar.archiveFile
+	}
+	tasks.build.dependsOn remapJar
+} else {
+	tasks.build.dependsOn shadowJar
+}
+
+tasks.named('compileTestJava') { enabled = false }
+tasks.named('processTestResources') { enabled = false }
+tasks.named('test') { enabled = false }

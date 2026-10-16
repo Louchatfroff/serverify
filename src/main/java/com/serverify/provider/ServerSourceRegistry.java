@@ -8,17 +8,19 @@ import com.serverify.model.ServerEntry;
 import com.serverify.provider.ServerSource.Sort;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public final class ServerSourceRegistry {
-	private static final System.Logger LOG = System.getLogger("serverify");
+	private static final Logger LOG = Logger.getLogger("serverify");
 
 	private final List<ServerSource> sources;
 
 	public ServerSourceRegistry(List<ServerSource> sources) {
-		this.sources = List.copyOf(sources);
+		this.sources = new java.util.ArrayList<>(sources);
 	}
 
 	public CompletableFuture<Void> load(Sort sort, String query, Category category, int page, Set<String> seen,
@@ -27,10 +29,10 @@ public final class ServerSourceRegistry {
 		for (ServerSource source : sources) {
 			chain = chain.thenCompose(ignored -> source.list(sort, query, category, page).handle((list, error) -> {
 				if (error != null) {
-					LOG.log(System.Logger.Level.WARNING, "Source " + source.id() + " failed: " + error);
+					LOG.log(Level.WARNING, "Source " + source.id() + " failed: " + error);
 					return null;
 				}
-				List<ServerEntry> fresh = list.stream().filter(e -> seen.add(e.key())).toList();
+				List<ServerEntry> fresh = list.stream().filter(e -> seen.add(e.key())).collect(java.util.stream.Collectors.toList());
 				if (!fresh.isEmpty()) {
 					onBatch.accept(fresh);
 				}

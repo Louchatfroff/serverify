@@ -3,48 +3,62 @@
 
 package com.serverify.network;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.time.Duration;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 public final class Http {
-	private static final Duration TIMEOUT = Duration.ofSeconds(10);
-	private static final HttpClient CLIENT = HttpClient.newBuilder()
-			.connectTimeout(TIMEOUT)
-			.followRedirects(HttpClient.Redirect.NORMAL)
-			.build();
+	private static final int TIMEOUT_MS = 10_000;
 
 	private Http() {
 	}
 
 	public static CompletableFuture<String> get(String url, String accept) {
-		return send(url, accept, HttpResponse.BodyHandlers.ofString());
+		return CompletableFuture.supplyAsync(() -> new String(fetch(url, accept), StandardCharsets.UTF_8));
 	}
 
 	public static CompletableFuture<byte[]> getBytes(String url) {
-		return send(url, "image/png, image/*;q=0.8", HttpResponse.BodyHandlers.ofByteArray());
+		return CompletableFuture.supplyAsync(() -> fetch(url, "image/png, image/*;q=0.8"));
 	}
 
-	private static <T> CompletableFuture<T> send(String url, String accept, HttpResponse.BodyHandler<T> handler) {
-		return attempt(url, accept, handler).exceptionallyCompose(first -> attempt(url, accept, handler));
-	}
-
-	private static <T> CompletableFuture<T> attempt(String url, String accept, HttpResponse.BodyHandler<T> handler) {
-		HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-				.timeout(TIMEOUT)
-				.header("User-Agent", "Serverify/0.1 (Minecraft client mod)")
-				.header("Accept", accept)
-				.build();
-		return CLIENT.sendAsync(request, handler).thenApply(response -> {
-			if (response.statusCode() / 100 != 2) {
-				throw new CompletionException(new IOException("HTTP " + response.statusCode() + " for " + url));
+	private static byte[] fetch(String url, String accept) {
+		try {
+			return attempt(url, accept);
+		} catch (IOException first) {
+			try {
+				return attempt(url, accept);
+			} catch (IOException second) {
+				throw new java.util.concurrent.CompletionException(second);
 			}
-			return response.body();
-		});
+		}
+	}
+
+	private static byte[] attempt(String url, String accept) throws IOException {
+		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+		try {
+			connection.setConnectTimeout(TIMEOUT_MS);
+			connection.setReadTimeout(TIMEOUT_MS);
+			connection.setInstanceFollowRedirects(true);
+			connection.setRequestProperty("User-Agent", "Serverify/0.1 (Minecraft client mod)");
+			connection.setRequestProperty("Accept", accept);
+			int status = connection.getResponseCode();
+			if (status / 100 != 2) {
+				throw new IOException("HTTP " + status + " for " + url);
+			}
+			try (InputStream in = connection.getInputStream()) {
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				byte[] buffer = new byte[8192];
+				for (int read; (read = in.read(buffer)) != -1; ) {
+					out.write(buffer, 0, read);
+				}
+				return out.toByteArray();
+			}
+		} finally {
+			connection.disconnect();
+		}
 	}
 }

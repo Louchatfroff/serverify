@@ -22,10 +22,15 @@ import gg.essential.elementa.UIComponent
 import gg.essential.elementa.components.UIImage
 import gg.essential.elementa.components.image.ImageProvider
 import gg.essential.elementa.renderer.ElementaExtractor
+import gg.essential.universal.UMatrixStack
 import java.awt.Color
 import kotlin.math.roundToInt
 
-object EmptyImage : ImageProvider
+object EmptyImage : ImageProvider {
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun drawImage(matrixStack: UMatrixStack, x: Double, y: Double, width: Double, height: Double, color: Color) {
+    }
+}
 
 class UIImageWrapper(val image: UIImage) : UIComponent(), ImageProvider {
     override fun extract(
@@ -37,6 +42,12 @@ class UIImageWrapper(val image: UIImage) : UIComponent(), ImageProvider {
         color: Color
     ) {
         image.extract(extractor, x, y, width, height, color)
+    }
+
+    override fun draw(matrixStack: UMatrixStack) {
+        beforeDraw(matrixStack)
+        image.drawImage(matrixStack, getLeft().toDouble(), getTop().toDouble(), getWidth().toDouble(), getHeight().toDouble(), getColor())
+        super.draw(matrixStack)
     }
 
     override fun extractComponent(extractor: ElementaExtractor) {

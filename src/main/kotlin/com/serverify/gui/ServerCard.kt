@@ -18,7 +18,7 @@
 
 package com.serverify.gui
 
-import com.serverify.client.ServerifyClient
+import com.serverify.Serverify
 import com.serverify.model.ServerEntry
 import gg.essential.elementa.components.*
 import gg.essential.elementa.constraints.CenterConstraint
@@ -82,7 +82,7 @@ class ServerCard(entry: ServerEntry) : UIBlock(Colors.BACKGROUND) {
         } childOf pill
         pillText childOf pill
 
-        if (ServerifyClient.favorites.contains(entry)) {
+        if (Serverify.favorites.contains(entry)) {
             UIText("★").constrain {
                 x = 4.pixels()
                 y = 4.pixels()

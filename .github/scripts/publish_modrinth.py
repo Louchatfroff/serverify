@@ -8,7 +8,6 @@ import sys
 import urllib.error
 import urllib.request
 import uuid
-import zipfile
 from pathlib import Path
 
 API = "https://api.modrinth.com/v2"
@@ -18,7 +17,8 @@ DEPENDENCIES = [
     {"project_id": "Ha28R6CL", "dependency_type": "required"},
     {"project_id": "mOgUt4GM", "dependency_type": "optional"},
 ]
-JAR_NAME = re.compile(r"^serverify-mc(\d+(?:\.\d+)*)-(.+)\.jar$")
+JAR_NAME = re.compile(r"^serverify-(fabric|forge|neoforge)-mc(\d+(?:\.\d+)*)-(.+)\.jar$")
+LOADERS = {"fabric": ["fabric", "quilt"], "forge": ["forge"], "neoforge": ["neoforge"]}
 
 
 def call(method, path, token=None, data=None, content_type=None):
@@ -30,7 +30,8 @@ def call(method, path, token=None, data=None, content_type=None):
         request.add_header("Content-Type", content_type)
     try:
         with urllib.request.urlopen(request) as response:
-            return json.load(response)
+            body = response.read()
+            return json.loads(body) if body else None
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf8", "replace")[:500]
         sys.exit(f"Modrinth {method} {path} failed with HTTP {error.code}: {detail}")
@@ -51,11 +52,6 @@ def in_range(version, expression):
             return False
     return True
 
-
-def supported_versions(jar, releases):
-    with zipfile.ZipFile(jar) as archive:
-        expression = json.loads(archive.read("fabric.mod.json"))["depends"]["minecraft"]
-    return [v for v in releases if re.fullmatch(r"\d+(?:\.\d+)*", v) and in_range(v, expression)]
 
 
 def multipart(data, jar):
@@ -82,6 +78,10 @@ def main():
     dry_run = os.environ.get("DRY_RUN") == "1"
 
     project_id = project if dry_run else call("GET", f"/project/{project}", token)["id"]
+    if not dry_run:
+        call("PATCH", f"/project/{project_id}", token,
+             json.dumps({"client_side": "required", "server_side": "unsupported"}).encode("utf8"),
+             "application/json")
     existing = set() if dry_run else {
         v["version_number"] for v in call("GET", f"/project/{project_id}/version", token)
     }
@@ -89,14 +89,19 @@ def main():
         v["version"] for v in call("GET", "/tag/game_version") if v["version_type"] == "release"
     ]
 
+    ranges = {(e["loader"], e["minecraft_version"]): e["minecraft_range"] for e in json.loads((Path(__file__).parent.parent / "versions.json").read_text())}
     failures = 0
     for jar in sorted(jar_dir.glob("*.jar")):
         match = JAR_NAME.match(jar.name)
         if not match:
             continue
-        minecraft, mod_version = match.groups()
-        game_versions = supported_versions(jar, releases)
-        version_number = f"{mod_version}+mc{minecraft}"
+        loader, minecraft, mod_version = match.groups()
+        expression = ranges.get((loader, minecraft))
+        if expression is None:
+            print(f"skipping {jar.name}: not in versions.json")
+            continue
+        game_versions = [v for v in releases if re.fullmatch(r"\d+(?:\.\d+)*", v) and in_range(v, expression)]
+        version_number = f"{mod_version}+{loader}.mc{minecraft}"
         if not game_versions:
             print(f"skipping {jar.name}: Modrinth does not list Minecraft {minecraft} yet")
             failures += 1
@@ -105,13 +110,13 @@ def main():
             print(f"skipping {jar.name}: {version_number} is already on Modrinth")
             continue
         data = json.dumps({
-            "name": f"Serverify {mod_version} for Minecraft {minecraft}",
+            "name": f"Serverify {mod_version} for {loader.capitalize()} {minecraft}",
             "version_number": version_number,
             "changelog": changelog,
-            "dependencies": DEPENDENCIES,
+            "dependencies": DEPENDENCIES if loader == "fabric" else [],
             "game_versions": game_versions,
             "version_type": "release",
-            "loaders": ["fabric"],
+            "loaders": LOADERS[loader],
             "featured": True,
             "project_id": project_id,
             "file_parts": ["file"],

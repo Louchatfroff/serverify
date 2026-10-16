@@ -4,6 +4,11 @@ pluginManagement {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
+		maven { url = 'https://maven.architectury.dev/' }
+		maven { url = 'https://maven.minecraftforge.net' }
+		maven { url = 'https://maven.neoforged.net/releases/' }
+		maven { url = 'https://maven.dediamondpro.dev/releases' }
+		maven { url = 'https://repo.essential.gg/repository/maven-public/' }
 		mavenCentral()
 		gradlePluginPortal()
 	}
@@ -11,6 +16,9 @@ pluginManagement {
 
 rootProject.name = 'serverify'
 
-if (providers.gradleProperty('obfuscated').getOrElse('false') == 'true') {
+def loader = providers.gradleProperty('loader').getOrElse('fabric')
+if (loader != 'fabric') {
+	rootProject.buildFileName = 'build-forge.gradle'
+} else if (providers.gradleProperty('obfuscated').getOrElse('false') == 'true') {
 	rootProject.buildFileName = 'build-remap.gradle'
 }

@@ -52,7 +52,7 @@ object ServerIcons {
 
     private fun load(entry: ServerEntry): CompletableFuture<BufferedImage> =
         fetch(entry.iconUrl())
-            .exceptionallyCompose { fetch(fallbackUrl(entry)) }
+            .orElse { fetch(fallbackUrl(entry)) }
             .exceptionally { placeholder() }
             .thenApply { image ->
                 colors[entry.key()] = dominantColor(image)
@@ -60,10 +60,10 @@ object ServerIcons {
             }
 
     private fun fallbackUrl(entry: ServerEntry): String =
-        "https://api.mcsrvstat.us/icon/" + URLEncoder.encode(entry.address(), StandardCharsets.UTF_8)
+        "https://api.mcsrvstat.us/icon/" + URLEncoder.encode(entry.address(), "UTF-8")
 
     private fun fetch(url: String): CompletableFuture<BufferedImage> {
-        if (url.isEmpty()) return CompletableFuture.failedFuture(IOException("no icon url"))
+        if (url.isEmpty()) return CompletableFuture<BufferedImage>().also { it.completeExceptionally(IOException("no icon url")) }
         return Http.getBytes(url).thenApply { bytes ->
             val source = ImageIO.read(ByteArrayInputStream(bytes)) ?: throw IOException("unsupported image format")
             scaled(source)
@@ -114,3 +114,6 @@ object ServerIcons {
         return Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2].coerceAtLeast(MIN_BRIGHTNESS)))
     }
 }
+
+private fun <T> CompletableFuture<T>.orElse(next: () -> CompletableFuture<T>): CompletableFuture<T> =
+    handle { value, error -> if (error == null) CompletableFuture.completedFuture(value) else next() }.thenCompose { it }

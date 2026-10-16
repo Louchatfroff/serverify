@@ -33,6 +33,6 @@ public final class MultiplayerIntegration {
 
 	private static ServerData serverData(ServerEntry entry) {
 		String name = ChatFormatting.stripFormatting(entry.name());
-		return new ServerData(name == null || name.isBlank() ? entry.host() : name.strip(), entry.address(), false);
+		return new ServerData(name == null || name.trim().isEmpty() ? entry.host() : name.trim(), entry.address(), false);
 	}
 }
