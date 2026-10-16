@@ -90,3 +90,19 @@ if (obfuscated) {
 tasks.named('compileTestJava') { enabled = false }
 tasks.named('processTestResources') { enabled = false }
 tasks.named('test') { enabled = false }
+
+tasks.named('generateDLIConfig') {
+	doLast {
+		def known = ['commonProperties', 'clientProperties', 'clientArgs', 'serverProperties', 'serverArgs', 'dataProperties', 'dataArgs', 'gametestserverProperties', 'gametestserverArgs']
+		def config = file("${rootDir}/.gradle/loom-cache/launch.cfg")
+		def kept = []
+		def keep = true
+		config.readLines().each { line ->
+			if (!line.startsWith('\t') && !line.startsWith(' ') && line.trim()) {
+				keep = known.contains(line.trim())
+			}
+			if (keep) kept << line
+		}
+		config.text = kept.join('\n') + '\n'
+	}
+}
