@@ -266,7 +266,7 @@
   "forge_mc_range": "[1.21.5]",
   "pack_format": "55",
   "forge_version": "1.21.5-55.0.4",
-  "publish": false
+  "publish": true
  },
  {
   "name": "forge-1.21.4",
@@ -280,7 +280,7 @@
   "forge_mc_range": "[1.21.2,1.21.4]",
   "pack_format": "46",
   "forge_version": "1.21.4-54.1.0",
-  "publish": false
+  "publish": true
  },
  {
   "name": "forge-1.21.1",
@@ -294,7 +294,7 @@
   "forge_mc_range": "[1.21,1.21.1]",
   "pack_format": "34",
   "forge_version": "1.21.1-52.0.40",
-  "publish": false
+  "publish": true
  },
  {
   "name": "forge-1.20.6",
@@ -308,7 +308,7 @@
   "forge_mc_range": "[1.20.5,1.20.6]",
   "pack_format": "32",
   "forge_version": "1.20.6-50.2.14",
-  "publish": false
+  "publish": true
  },
  {
   "name": "forge-1.20.4",
@@ -321,8 +321,8 @@
   "minecraft_range": ">=1.20.2 <=1.20.4",
   "forge_mc_range": "[1.20.2,1.20.4]",
   "pack_format": "22",
-  "forge_version": "1.20.4-49.0.19",
-  "publish": false
+  "forge_version": "1.20.4-49.2.13",
+  "publish": true
  },
  {
   "name": "forge-1.20.1",
@@ -378,8 +378,8 @@
   "forge_mc_range": "[1.18,1.18.2]",
   "pack_format": "8",
   "forge_version": "1.18.2-40.3.12",
-  "loader_dir": "forge-legacy",
-  "publish": false
+  "loader_dir": "forge-18",
+  "publish": true
  },
  {
   "name": "forge-1.17.1",
@@ -424,7 +424,8 @@
   "pack_format": "99",
   "neoforge_version": "26.3.0.86",
   "fabric.loom.disableObfuscation": "true",
-  "publish": false
+  "universalcraft_build": "538",
+  "publish": true
  },
  {
   "name": "neoforge-26.2",
@@ -439,13 +440,14 @@
   "pack_format": "99",
   "neoforge_version": "26.2.0.93",
   "fabric.loom.disableObfuscation": "true",
-  "publish": false
+  "universalcraft_build": "538",
+  "publish": true
  },
  {
   "name": "neoforge-26.1",
   "loader": "neoforge",
   "loom.platform": "neoforge",
-  "minecraft_version": "26.1",
+  "minecraft_version": "26.1.2",
   "universalcraft_version": "26.1",
   "java_version": "25",
   "compat": "v26",
@@ -454,7 +456,8 @@
   "pack_format": "99",
   "neoforge_version": "26.1.2.122",
   "fabric.loom.disableObfuscation": "true",
-  "publish": false
+  "universalcraft_build": "538",
+  "publish": true
  },
  {
   "name": "neoforge-1.21.11",
@@ -468,7 +471,7 @@
   "forge_mc_range": "[1.21.11]",
   "pack_format": "75",
   "neoforge_version": "21.11.48",
-  "publish": false
+  "publish": true
  },
  {
   "name": "neoforge-1.21.8",
@@ -482,7 +485,7 @@
   "forge_mc_range": "[1.21.6,1.21.8]",
   "pack_format": "64",
   "neoforge_version": "21.8.57",
-  "publish": false
+  "publish": true
  },
  {
   "name": "neoforge-1.21.5",

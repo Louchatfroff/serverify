@@ -36,10 +36,8 @@ public final class Smoke {
 				Thread.sleep(200);
 			}
 			Minecraft mc = Minecraft.getInstance();
-			for (int waited = 0; !(UScreen.getCurrentScreen() instanceof TitleScreen) && waited < 240; waited++) {
-				Thread.sleep(500);
-			}
-			System.out.println("serverify smoke: screen " + UScreen.getCurrentScreen());
+			waitForTitle(mc);
+			System.out.println("serverify smoke: screen ready");
 			Thread.sleep(3000);
 			show(mc, () -> new JoinMultiplayerScreen(new TitleScreen()), 3000, "1-multiplayer");
 			show(mc, ServerBrowserScreen::new, 15000, "2-browser");
@@ -88,7 +86,7 @@ public final class Smoke {
 					} else if (type == String.class) {
 						args[i] = name;
 					} else if (type == RenderTarget.class) {
-						args[i] = mc.getMainRenderTarget();
+						args[i] = mainTarget(mc);
 					} else if (type == int.class) {
 						int value = ints == 2 ? (seenInts == 0 ? mc.getWindow().getWidth() : mc.getWindow().getHeight()) : 1;
 						args[i] = value;
@@ -103,6 +101,26 @@ public final class Smoke {
 			System.err.println("serverify smoke: no usable Screenshot.grab overload");
 		} catch (ReflectiveOperationException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static Object mainTarget(Minecraft mc) throws ReflectiveOperationException {
+		try {
+			return Minecraft.class.getMethod("getMainRenderTarget").invoke(mc);
+		} catch (NoSuchMethodException e) {
+			Object renderer = Minecraft.class.getField("gameRenderer").get(mc);
+			return renderer.getClass().getMethod("mainRenderTarget").invoke(renderer);
+		}
+	}
+
+	private static void waitForTitle(Minecraft mc) throws InterruptedException {
+		try {
+			java.lang.reflect.Field field = Minecraft.class.getField("screen");
+			for (int waited = 0; waited < 240 && !(field.get(mc) instanceof TitleScreen); waited++) {
+				Thread.sleep(500);
+			}
+		} catch (NoSuchFieldException | IllegalAccessException e) {
+			Thread.sleep(45000);
 		}
 	}
 }

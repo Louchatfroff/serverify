@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1
+
+More Forge and NeoForge versions.
+
+### New
+- Forge builds for 1.18.2, 1.20.4, 1.20.6, 1.21.1, 1.21.4 and 1.21.5. The 1.20.4 to 1.21.5 builds were launched in a real Forge install; 1.18.2 was checked in a development client.
+- NeoForge builds for 1.21.8, 1.21.11, 26.1, 26.2 and 26.3, checked in a development client.
+
+### Changed
+- Forge 1.20.4 builds against Forge 49.2.13.
+- NeoForge 26.1 builds against Minecraft 26.1.2 and is named `mc26.1.2`.
+
 ## 0.3.0
 
 Serverify now runs on many more Minecraft versions and on Forge and NeoForge, not only Fabric.
