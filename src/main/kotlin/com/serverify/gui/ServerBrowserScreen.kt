@@ -29,7 +29,7 @@ import gg.essential.elementa.constraints.*
 import gg.essential.elementa.constraints.animation.Animations
 import gg.essential.elementa.dsl.*
 import gg.essential.universal.UKeyboard
-import net.minecraft.client.gui.screens.Screen
+import com.serverify.compat.Screen
 import java.util.Locale
 import kotlin.math.min
 

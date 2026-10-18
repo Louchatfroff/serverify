@@ -17,7 +17,9 @@ loom {
 
 sourceSets.main.java.srcDirs "src/compat/${project.compat}/java", "src/loader/${project.findProperty("loader_dir") ?: project.loader}/java", "src/compat/${project.compat}/${project.loader}/java"
 
-if (project.findProperty('smoke_main')) {
+sourceSets.main.kotlin.srcDir "src/kind/${project.findProperty("kind") ?: "modern"}/kotlin"
+
+if (project.findProperty("smoke_main")) {
 	sourceSets.main.java.srcDirs "src/smoke-main${project.findProperty('smoke_main') == 'true' ? '' : project.findProperty('smoke_main')}/java"
 }
 

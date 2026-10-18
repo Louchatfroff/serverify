@@ -3,6 +3,6 @@
 
 package com.serverify.gui
 
-import net.minecraft.client.resources.language.I18n
+import com.serverify.compat.Lang
 
-fun String.localize(vararg parameters: Any): String = I18n.get(this, *parameters)
+fun String.localize(vararg parameters: Any): String = Lang.get(this, *parameters)

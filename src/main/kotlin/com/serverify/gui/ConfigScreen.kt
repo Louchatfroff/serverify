@@ -16,7 +16,7 @@ import gg.essential.elementa.constraints.animation.Animations
 import gg.essential.elementa.dsl.*
 import gg.essential.universal.UKeyboard
 import gg.essential.universal.UScreen
-import net.minecraft.client.gui.screens.Screen
+import com.serverify.compat.Screen
 import java.awt.Color
 
 class ConfigScreen(private val parent: Screen?) : WindowScreen(

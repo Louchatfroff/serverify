@@ -31,7 +31,7 @@ import gg.essential.elementa.dsl.*
 import gg.essential.universal.ChatColor
 import gg.essential.universal.UDesktop
 import gg.essential.universal.UMinecraft
-import net.minecraft.client.gui.screens.Screen
+import com.serverify.compat.Screen
 import java.awt.Color
 import kotlin.math.min
 
@@ -181,7 +181,7 @@ class ServerScreen(private var entry: ServerEntry) : ServerifyScreen() {
             val motd = live?.takeIf { it.online() }?.motd()
             if (motd == null) motdBox.hide()
             else {
-                motdText.setText(Legacy.format(motd))
+                motdText.setText(motd)
                 motdBox.unhide()
             }
         }

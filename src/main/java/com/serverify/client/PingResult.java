@@ -3,7 +3,6 @@
 
 package com.serverify.client;
 
-import net.minecraft.network.chat.Component;
 
 public final class PingResult {
 	private final boolean online;
@@ -11,9 +10,9 @@ public final class PingResult {
 	private final int maxPlayers;
 	private final String version;
 	private final long pingMs;
-	private final Component motd;
+	private final String motd;
 
-	public PingResult(boolean online, int players, int maxPlayers, String version, long pingMs, Component motd) {
+	public PingResult(boolean online, int players, int maxPlayers, String version, long pingMs, String motd) {
 		this.online = online;
 		this.players = players;
 		this.maxPlayers = maxPlayers;
@@ -42,7 +41,7 @@ public final class PingResult {
 		return pingMs;
 	}
 
-	public Component motd() {
+	public String motd() {
 		return motd;
 	}
 }

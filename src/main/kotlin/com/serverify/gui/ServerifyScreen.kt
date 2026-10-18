@@ -24,7 +24,8 @@ import gg.essential.elementa.WindowScreen
 import gg.essential.universal.UKeyboard
 import gg.essential.universal.UMinecraft
 import gg.essential.universal.UResolution
-import net.minecraft.client.gui.screens.Screen
+import com.serverify.compat.Scale
+import com.serverify.compat.Screen
 import kotlin.math.floor
 
 abstract class ServerifyScreen(
@@ -104,12 +105,8 @@ abstract class ServerifyScreen(
 
         private fun getGuiScale(defaultScale: Int, target: Float): Int {
             val minScale = floor(UResolution.windowWidth / target).toInt()
-            return minScale.coerceAtLeast(1).coerceAtMost(calculateScaleFactor(defaultScale))
+            return minScale.coerceAtLeast(1).coerceAtMost(Scale.of(defaultScale))
         }
 
-        private fun calculateScaleFactor(guiScale: Int): Int {
-            val mc = UMinecraft.getMinecraft()
-            return mc.window.calculateScale(guiScale, mc.isEnforceUnicode)
-        }
     }
 }

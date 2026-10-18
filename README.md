@@ -3,7 +3,7 @@
 [![Build](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml/badge.svg)](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml)
 [![Release](https://img.shields.io/github/v/release/Louchatfroff/serverify)](https://github.com/Louchatfroff/serverify/releases/latest)
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
-![Minecraft](https://img.shields.io/badge/minecraft-1.16.5%20to%2026.3-62b47a)
+![Minecraft](https://img.shields.io/badge/minecraft-1.8.9%20to%2026.3-62b47a)
 
 A client-side mod for [Fabric](https://fabricmc.net), Quilt, [Forge](https://minecraftforge.net) and [NeoForge](https://neoforged.net) that adds a fast, native **server browser** to Minecraft's Multiplayer screen. Search, filter, check live status and join, without leaving the game.
 
@@ -38,10 +38,10 @@ Jars are named `serverify-<loader>-mc<version>-<release>.jar`. Each one covers t
 | Loader | Minecraft versions |
 | --- | --- |
 | Fabric and Quilt | 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.10, 1.21.11, 26.1, 26.2, 26.3 |
-| Forge | 1.17.1, 1.19.2, 1.19.4, 1.20.1 |
-| NeoForge | 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.5 |
+| Forge | 1.8.9, 1.12.2, 1.16.5, 1.17.1, 1.18.2, 1.19.2, 1.19.4, 1.20.1, 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.5 |
+| NeoForge | 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.5, 1.21.8, 1.21.11, 26.1, 26.2, 26.3 |
 
-Java 8 runs 1.16.5, Java 16 runs 1.17, Java 17 runs 1.18 to 1.20.4, Java 21 runs 1.20.5 to 1.21.11 and Java 25 runs 26.x. Mod Menu is optional on Fabric. Quilt loads the Fabric jars and has not been tested separately.
+Java 8 runs 1.8.9 to 1.16.5, Java 16 runs 1.17, Java 17 runs 1.18 to 1.20.4, Java 21 runs 1.20.5 to 1.21.11 and Java 25 runs 26.x. Mod Menu is optional on Fabric. Quilt loads the Fabric jars and has not been tested separately.
 
 ## Build from source
 
@@ -59,6 +59,8 @@ jq -r '.[] | select(.name == "forge-1.20.1") | del(.name, .publish) | to_entries
 ```
 
 Fabric builds run the scripted in-game tests that save screenshots. `runProductionClientGameTest` launches the real remapped jar. Add `-Psmoke=true` on versions that predate Fabric's client game test API. Forge and NeoForge builds are checked in a development client with `runClient -Psmoke_main=true`, which opens each screen and saves screenshots.
+
+The Forge builds for 1.8.9 and 1.12.2 come from the separate Gradle project in `legacy/`, which needs JDK 21 to run Gradle and JDK 8 to compile. Run `./gradlew :1.12.2-forge:build` or `./gradlew :1.8.9-forge:build` inside `legacy/`. Add `-Psmoke=true` to bake in the screen test driver.
 
 ## How it works
 

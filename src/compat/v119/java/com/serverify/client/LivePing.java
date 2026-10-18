@@ -4,6 +4,7 @@
 package com.serverify.client;
 
 import com.serverify.model.ServerEntry;
+import com.serverify.compat.MotdFormat;
 import com.serverify.network.Async;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.ServerStatusPinger;
@@ -57,6 +58,6 @@ public final class LivePing implements AutoCloseable {
 		Matcher matcher = PLAYERS.matcher(data.status.getString());
 		boolean online = matcher.find();
 		return new PingResult(online, online ? Integer.parseInt(matcher.group(1)) : 0, online ? Integer.parseInt(matcher.group(2)) : 0,
-				data.version.getString(), data.ping, data.motd);
+				data.version.getString(), data.ping, MotdFormat.format(data.motd));
 	}
 }

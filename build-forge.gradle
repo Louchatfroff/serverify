@@ -30,7 +30,7 @@ kotlin {
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	if (obfuscated) {
-		mappings loom.officialMojangMappings()
+		mappings(project.hasProperty("mcp_mappings") ? project.mcp_mappings : loom.officialMojangMappings())
 	}
 	if (isNeo) {
 		neoForge "net.neoforged:neoforge:${project.neoforge_version}"

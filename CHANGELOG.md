@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.2
+
+Forge builds for the oldest Minecraft versions.
+
+### New
+- Forge builds for Minecraft 1.8.9 and 1.12.2, launched in a real Forge install with Java 8.
+- Forge build for Minecraft 1.16.5, launched in a real Forge install.
+
+### Changed
+- The interface code no longer references Minecraft classes, so one source tree builds for every version.
+
 ## 0.3.1
 
 More Forge and NeoForge versions.

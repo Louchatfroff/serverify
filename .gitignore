@@ -24,3 +24,18 @@ node_modules/
 .next/
 .vercel/
 .env*.local
+
+# Legacy build copies of the shared sources
+legacy/src/main/java/com/serverify/Serverify.java
+legacy/src/main/java/com/serverify/config/
+legacy/src/main/java/com/serverify/favorites/
+legacy/src/main/java/com/serverify/model/
+legacy/src/main/java/com/serverify/network/
+legacy/src/main/java/com/serverify/provider/
+legacy/src/main/java/com/serverify/client/PingResult.java
+legacy/src/main/kotlin/com/serverify/gui/
+legacy/build/
+legacy/.gradle/
+legacy/versions/*/build/
+legacy/src/main/java/com/serverify/legacy/
+legacy/src/main/java/com/serverify/smoke/
