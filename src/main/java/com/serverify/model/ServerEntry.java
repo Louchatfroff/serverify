@@ -9,6 +9,8 @@ import java.util.Locale;
 public final class ServerEntry {
 	public static final int DEFAULT_PORT = 25565;
 
+	private static final String[] ALIAS_PREFIXES = {"www.", "play.", "mc.", "join.", "jugar.", "minecraft.", "java."};
+
 	private final String host;
 	private final int port;
 	private final String name;
@@ -94,9 +96,15 @@ public final class ServerEntry {
 	}
 
 	public String key() {
-		String h = host.toLowerCase(Locale.ROOT);
+		String h = host.trim().toLowerCase(Locale.ROOT);
 		if (h.endsWith(".")) {
 			h = h.substring(0, h.length() - 1);
+		}
+		for (String prefix : ALIAS_PREFIXES) {
+			if (h.startsWith(prefix) && h.indexOf('.', prefix.length()) > 0) {
+				h = h.substring(prefix.length());
+				break;
+			}
 		}
 		return h + ":" + port;
 	}

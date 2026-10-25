@@ -6,7 +6,11 @@ package com.serverify;
 import com.serverify.config.ServerifyConfig;
 import com.serverify.favorites.Favorites;
 import com.serverify.gui.ServerBrowserScreen;
+import com.serverify.provider.FeaturedSource;
 import com.serverify.provider.MinecraftListInfoSource;
+import com.serverify.provider.MinecraftMpSource;
+import com.serverify.provider.MinecraftServersOrgSource;
+import com.serverify.provider.ModrinthSource;
 import com.serverify.provider.ServerSource;
 import com.serverify.provider.ServerSourceRegistry;
 import com.serverify.provider.TopMcServersSource;
@@ -36,11 +40,19 @@ public final class Serverify {
 
 	public static ServerSourceRegistry sources() {
 		List<ServerSource> enabled = new ArrayList<>();
+		enabled.add(new FeaturedSource());
+		if (config.modrinthEnabled) {
+			enabled.add(new ModrinthSource());
+		}
 		if (config.minecraftListInfoEnabled) {
 			enabled.add(new MinecraftListInfoSource());
 		}
 		if (config.topMcServersEnabled) {
 			enabled.add(new TopMcServersSource());
+		}
+		if (config.moreSourcesEnabled) {
+			enabled.add(new MinecraftServersOrgSource());
+			enabled.add(new MinecraftMpSource());
 		}
 		return new ServerSourceRegistry(enabled);
 	}

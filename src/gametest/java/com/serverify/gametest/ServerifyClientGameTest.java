@@ -25,7 +25,7 @@ public final class ServerifyClientGameTest implements FabricClientGameTest {
 		context.waitTicks(5);
 		context.takeScreenshot("1-multiplayer");
 
-		context.clickScreenButton("serverify.open");
+		context.clickScreenButton("serverify.open.icon");
 		context.waitForScreen(ServerBrowserScreen.class);
 		context.waitTicks(LOAD_TICKS);
 		context.takeScreenshot("2-browser");

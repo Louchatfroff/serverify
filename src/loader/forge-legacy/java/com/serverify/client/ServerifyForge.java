@@ -19,7 +19,7 @@ public final class ServerifyForge {
 
 	private static void onScreenInit(GuiScreenEvent.InitGuiEvent.Post event) {
 		if (event.getGui() instanceof JoinMultiplayerScreen) {
-			event.addWidget(ButtonFactory.create(event.getGui().width, Serverify::open));
+			event.addWidget(ButtonFactory.create(event.getGui(), event.getGui().width, Serverify::open));
 		}
 	}
 }

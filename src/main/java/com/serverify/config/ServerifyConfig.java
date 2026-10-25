@@ -5,6 +5,7 @@ package com.serverify.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.serverify.model.Region;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -19,8 +20,11 @@ public final class ServerifyConfig {
 	private static final Logger LOG = Logger.getLogger("serverify");
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+	public boolean modrinthEnabled = true;
 	public boolean minecraftListInfoEnabled = true;
 	public boolean topMcServersEnabled = true;
+	public boolean moreSourcesEnabled = true;
+	public String region = "auto";
 	public int refreshSeconds = 45;
 
 	private transient Path file;
@@ -40,6 +44,17 @@ public final class ServerifyConfig {
 		config.file = file;
 		config.refreshSeconds = Math.max(MIN_REFRESH_SECONDS, Math.min(MAX_REFRESH_SECONDS, config.refreshSeconds));
 		return config;
+	}
+
+	public Region regionFilter() {
+		if ("all".equals(region)) {
+			return null;
+		}
+		try {
+			return Region.valueOf(region);
+		} catch (IllegalArgumentException | NullPointerException e) {
+			return Region.local();
+		}
 	}
 
 	public void save() {

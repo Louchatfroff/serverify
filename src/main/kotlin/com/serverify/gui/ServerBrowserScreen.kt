@@ -20,6 +20,7 @@ package com.serverify.gui
 
 import com.serverify.Serverify
 import com.serverify.model.Category
+import com.serverify.model.Region
 import com.serverify.model.ServerEntry
 import com.serverify.provider.ServerSource.Sort
 import gg.essential.elementa.UIComponent
@@ -38,6 +39,7 @@ class ServerBrowserScreen : ServerifyScreen() {
     private var category: Category? = null
     private var favoritesOnly = false
     private var onlineOnly = false
+    private var region: Region? = Serverify.config.regionFilter()
     private var sort = Sort.POPULAR
     private var page = 0
     private var generation = 0
@@ -171,6 +173,28 @@ class ServerBrowserScreen : ServerifyScreen() {
             onlineOnly = !onlineOnly
             reload()
         }
+
+        val regionBox = UIContainer().constrain {
+            x = 0.pixels()
+            y = SiblingConstraint()
+            width = 100.percent()
+            height = ChildLocationSizeConstraint()
+        } childOf categoryContainer
+
+        UIText("serverify.browse.region".localize()).constrain {
+            x = 4.pixels()
+            y = MaxConstraint(4.pixels(), SiblingConstraint(padding = 4f))
+            textScale = 1.5f.pixels()
+            color = Colors.TEXT_PRIMARY.toConstraint()
+        } childOf regionBox
+        addRow(regionBox, "serverify.region.all".localize(), { region == null }) {
+            chooseRegion(null)
+        }
+        for (entry in Region.entries) {
+            addRow(regionBox, entry.translationKey().localize(), { region == entry }) {
+                chooseRegion(entry)
+            }
+        }
     }
 
     private fun addRow(parent: UIComponent, label: String, isChecked: () -> Boolean, onToggle: () -> Unit) {
@@ -238,6 +262,16 @@ class ServerBrowserScreen : ServerifyScreen() {
 
     private fun sortLabel(sort: Sort): String = "serverify.sort.${sort.name.lowercase(Locale.ROOT)}".localize()
 
+    private fun chooseRegion(chosen: Region?) {
+        region = chosen
+        Serverify.config.region = chosen?.name ?: "all"
+        Serverify.config.save()
+        reload()
+    }
+
+    private fun accepts(server: ServerEntry): Boolean =
+        (!onlineOnly || server.online()) && (region?.matches(server.country()) ?: true)
+
     private fun reload() {
         checkRows.forEach { it.refresh() }
         load()
@@ -274,7 +308,7 @@ class ServerBrowserScreen : ServerifyScreen() {
             Window.enqueueRenderOperation {
                 if (token != generation) return@enqueueRenderOperation
                 rawAddedThisPage += batch.size
-                addCards(batch.filter { !onlineOnly || it.online() })
+                addCards(batch.filter { accepts(it) })
                 updateStatus()
             }
         }.whenComplete { _, _ ->

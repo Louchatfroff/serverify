@@ -15,7 +15,7 @@ public final class ServerifyClient implements ClientModInitializer {
 		Serverify.init(FabricLoader.getInstance().getConfigDir());
 		ScreenEvents.AFTER_INIT.register((minecraft, screen, width, height) -> {
 			if (screen instanceof JoinMultiplayerScreen) {
-				ScreenWidgets.of(screen).add(ButtonFactory.create(width, Serverify::open));
+				ScreenWidgets.of(screen).add(ButtonFactory.create(screen, width, Serverify::open));
 			}
 		});
 	}

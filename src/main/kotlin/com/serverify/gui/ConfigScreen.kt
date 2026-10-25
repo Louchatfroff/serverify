@@ -27,7 +27,7 @@ class ConfigScreen(private val parent: Screen?) : WindowScreen(
         x = CenterConstraint()
         y = CenterConstraint()
         width = 220.pixels()
-        height = 134.pixels()
+        height = 182.pixels()
     } childOf window
 
     init {
@@ -41,11 +41,17 @@ class ConfigScreen(private val parent: Screen?) : WindowScreen(
             color = Colors.TEXT_PRIMARY.toConstraint()
         } childOf panel
 
+        toggle("serverify.config.source.modrinth", { config.modrinthEnabled }) {
+            config.modrinthEnabled = !config.modrinthEnabled
+        }
         toggle("serverify.config.source.listinfo", { config.minecraftListInfoEnabled }) {
             config.minecraftListInfoEnabled = !config.minecraftListInfoEnabled
         }
         toggle("serverify.config.source.topmc", { config.topMcServersEnabled }) {
             config.topMcServersEnabled = !config.topMcServersEnabled
+        }
+        toggle("serverify.config.source.more", { config.moreSourcesEnabled }) {
+            config.moreSourcesEnabled = !config.moreSourcesEnabled
         }
         button({ "serverify.config.refresh".localize(config.refreshSeconds) }) {
             val next = config.refreshSeconds + REFRESH_STEP_SECONDS

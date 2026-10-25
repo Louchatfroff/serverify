@@ -70,13 +70,21 @@ public final class TopMcServersSource implements ServerSource {
 					digits(text(card, ".stat-current")),
 					digits(text(card, ".stat-max")),
 					"",
-					flag == null ? "" : flag.attr("alt"),
+					countryCode(flag),
 					digits(text(card, ".server-stats-metric-value--votes")),
 					icon == null ? "" : icon.absUrl("src"),
 					new ArrayList<>(tags),
 					"top-mc-servers.net"));
 		}
 		return out;
+	}
+
+	private static String countryCode(Element flag) {
+		if (flag == null) {
+			return "";
+		}
+		java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("/([a-z]{2})\\.[a-z]+$").matcher(flag.attr("src"));
+		return matcher.find() ? matcher.group(1).toUpperCase(java.util.Locale.ROOT) : flag.attr("alt");
 	}
 
 	private static String text(Element root, String selector) {

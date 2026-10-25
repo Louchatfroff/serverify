@@ -18,7 +18,9 @@ A client-side mod for [Fabric](https://fabricmc.net), Quilt, [Forge](https://min
 - **Live status:** the server page uses Minecraft's own server ping for real latency, player count, version and the live colored MOTD, and refreshes every 30 to 60 seconds.
 - **Join or save:** connect immediately, or add the server to your Multiplayer list in one click.
 - **Favorites:** a local list stored as JSON in `config/serverify/`.
-- **Sources:** [minecraft-list.info](https://minecraft-list.info) loads first, then other sites. The same server never appears twice.
+- **Sources:** [Modrinth](https://modrinth.com/discover/servers) loads first, then [minecraft-list.info](https://minecraft-list.info), [top-mc-servers.net](https://top-mc-servers.net), [minecraftservers.org](https://minecraftservers.org) and [minecraft-mp.com](https://minecraft-mp.com). Paid or promoted rows are skipped. The same server never appears twice, even when sources list it under different hostnames such as `play.` or `mc.` prefixes.
+- **Well known servers first:** when you pick a category, the best known servers of that category (Hypixel, CubeCraft, Wynncraft, EarthMC and more) come first, with live status.
+- **Regions:** filter the list by region (it starts on the region of your system language) to avoid high ping and languages you do not read.
 - **Settings:** enable or disable each source and set the refresh interval, through [Mod Menu](https://modrinth.com/mod/modmenu).
 
 | Server page | Live status | Settings |
@@ -31,7 +33,7 @@ A client-side mod for [Fabric](https://fabricmc.net), Quilt, [Forge](https://min
 2. On Fabric or Quilt, also download [Fabric API](https://modrinth.com/mod/fabric-api) and [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin). Forge and NeoForge need nothing else.
 3. Download the Serverify jar for your loader and version from the [latest release](https://github.com/Louchatfroff/serverify/releases/latest).
 4. Put the jars in `.minecraft/mods`.
-5. Start the game, open **Multiplayer** and press the **Serverify** button.
+5. Start the game, open **Multiplayer** and press the globe button next to **Add Server**.
 
 Jars are named `serverify-<loader>-mc<version>-<release>.jar`. Each one covers the range of Minecraft versions in `.github/versions.json`.
 

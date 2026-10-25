@@ -22,6 +22,9 @@ public final class Http {
 	}
 
 	public static CompletableFuture<byte[]> getBytes(String url) {
+		if (url.startsWith("data:")) {
+			return CompletableFuture.supplyAsync(() -> java.util.Base64.getDecoder().decode(url.substring(url.indexOf(',') + 1)));
+		}
 		return CompletableFuture.supplyAsync(() -> fetch(url, "image/png, image/*;q=0.8"));
 	}
 
@@ -43,7 +46,7 @@ public final class Http {
 			connection.setConnectTimeout(TIMEOUT_MS);
 			connection.setReadTimeout(TIMEOUT_MS);
 			connection.setInstanceFollowRedirects(true);
-			connection.setRequestProperty("User-Agent", "Serverify/0.1 (Minecraft client mod)");
+			connection.setRequestProperty("User-Agent", "Louchatfroff/serverify (https://github.com/Louchatfroff/serverify)");
 			connection.setRequestProperty("Accept", accept);
 			int status = connection.getResponseCode();
 			if (status / 100 != 2) {

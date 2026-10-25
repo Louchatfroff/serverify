@@ -24,11 +24,11 @@ public final class ServerifyMod {
 	public void onInit(GuiScreenEvent.InitGuiEvent.Post event) {
 		//#if MC>=11202
 		if (event.getGui() instanceof GuiMultiplayer) {
-			event.getButtonList().add(ButtonFactory.create(event.getGui().width));
+			event.getButtonList().add(ButtonFactory.create(event.getButtonList(), event.getGui().width));
 		}
 		//#else
 		//$$ if (event.gui instanceof GuiMultiplayer) {
-		//$$ 	event.buttonList.add(ButtonFactory.create(event.gui.width));
+		//$$ 	event.buttonList.add(ButtonFactory.create(event.buttonList, event.gui.width));
 		//$$ }
 		//#endif
 	}

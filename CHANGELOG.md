@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0
+
+Safer sources, better ordering and no more duplicates.
+
+### New
+- Modrinth servers are now the first source. Modrinth lists only servers that answer a live ping.
+- Well known servers of each category show first when you pick a category, with live player counts and icons.
+- A region filter in the sidebar. It starts on the region of your system language and keeps servers with an unknown country.
+- Two more sources, minecraftservers.org and minecraft-mp.com. Their promoted and premium rows are skipped.
+- A setting to turn the Modrinth source and the extra sources off.
+
+### Changed
+- The Serverify button is now a small globe icon next to Add Server on the Multiplayer screen.
+- Servers that appear under several hostnames (`play.example.com`, `mc.example.com`, `example.com`) are shown once.
+- The country of top-mc-servers.net rows is read from the flag image, so the region filter works for them.
+
 ## 0.3.2
 
 Forge builds for the oldest Minecraft versions.

@@ -95,6 +95,56 @@ class ProviderTest {
 	}
 
 	@Test
+	void parsesModrinthServers() throws IOException {
+		List<ServerEntry> servers = ModrinthSource.parse(resource("modrinth-search.json"), resource("modrinth-projects.json"));
+		assertEquals(3, servers.size());
+		ServerEntry first = servers.get(0);
+		assertFalse(first.host().isEmpty());
+		assertEquals("modrinth", first.source());
+		assertTrue(first.iconUrl().startsWith("https://cdn.modrinth.com/"));
+		assertTrue(servers.stream().anyMatch(s -> !s.country().isEmpty()));
+	}
+
+	@Test
+	void parsesMinecraftServersOrgWithoutPromotedRows() throws IOException {
+		List<ServerEntry> servers = MinecraftServersOrgSource.parse(resource("minecraftservers-org.html"), "https://minecraftservers.org/");
+		assertEquals(4, servers.size());
+		assertFalse(servers.get(0).host().isEmpty());
+		assertFalse(servers.get(0).name().isEmpty());
+		assertTrue(servers.get(0).iconUrl().startsWith("https://"));
+	}
+
+	@Test
+	void parsesMinecraftMpWithoutPremiumRows() throws IOException {
+		List<ServerEntry> servers = MinecraftMpSource.parse(resource("minecraft-mp.html"), "https://minecraft-mp.com/");
+		assertEquals(4, servers.size());
+		assertFalse(servers.get(0).host().isEmpty());
+		assertTrue(servers.stream().anyMatch(s -> s.country().length() == 2));
+	}
+
+	@Test
+	void everyCategoryWithFeaturedServersHasAtLeastOne() {
+		assertTrue(FeaturedSource.count(Category.BEDWARS) >= 2);
+		assertTrue(FeaturedSource.count(Category.ANARCHY) >= 1);
+	}
+
+	@Test
+	void regionsFilterByCountryAndKeepUnknownOnes() {
+		assertTrue(com.serverify.model.Region.EUROPE.matches("PL"));
+		assertFalse(com.serverify.model.Region.EUROPE.matches("US"));
+		assertTrue(com.serverify.model.Region.EUROPE.matches(""));
+		assertEquals("US", com.serverify.model.Region.codeOf("United_States_of_America"));
+	}
+
+	@Test
+	void hostnameAliasesShareOneKey() {
+		assertEquals(entry("mc.example.com", 25565, "a").key(), entry("Play.Example.com.", 25565, "b").key());
+		assertEquals(entry("example.com", 25565, "a").key(), entry("www.example.com", 25565, "b").key());
+		assertFalse(entry("mc.net", 25565, "a").key().equals(entry("net", 25565, "b").key()));
+		assertFalse(entry("play.example.com", 25565, "a").key().equals(entry("play.example.com", 25566, "b").key()));
+	}
+
+	@Test
 	void liveApiSmokeTest() {
 		List<ServerEntry> servers = new MinecraftListInfoSource()
 				.list(Sort.PLAYERS, "", Category.SURVIVAL, 1).orTimeout(30, java.util.concurrent.TimeUnit.SECONDS).join();
