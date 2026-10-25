@@ -82,8 +82,9 @@ def main():
         call("PATCH", f"/project/{project_id}", token,
              json.dumps({"client_side": "required", "server_side": "unsupported"}).encode("utf8"),
              "application/json")
-    existing = set() if dry_run else {
-        v["version_number"] for v in call("GET", f"/project/{project_id}/version", token)
+    replace = os.environ.get("REPLACE_EXISTING") == "1"
+    existing = {} if dry_run else {
+        v["version_number"]: v["id"] for v in call("GET", f"/project/{project_id}/version", token)
     }
     releases = [
         v["version"] for v in call("GET", "/tag/game_version") if v["version_type"] == "release"
@@ -107,8 +108,11 @@ def main():
             failures += 1
             continue
         if version_number in existing:
-            print(f"skipping {jar.name}: {version_number} is already on Modrinth")
-            continue
+            if not replace:
+                print(f"skipping {jar.name}: {version_number} is already on Modrinth")
+                continue
+            call("DELETE", f"/version/{existing[version_number]}", token)
+            print(f"deleted the old {version_number}")
         data = json.dumps({
             "name": f"Serverify {mod_version} for {loader.capitalize()} {minecraft}",
             "version_number": version_number,

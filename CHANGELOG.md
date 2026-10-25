@@ -10,6 +10,7 @@ Safer sources, better ordering and no more duplicates.
 - A region filter in the sidebar. It starts on the region of your system language and keeps servers with an unknown country.
 - Two more sources, minecraftservers.org and minecraft-mp.com. Their promoted and premium rows are skipped.
 - A setting to turn the Modrinth source and the extra sources off.
+- The Serverify logo as the mod icon in Mod Menu and in the Forge and NeoForge mod lists.
 
 ### Changed
 - The Serverify button is now a small globe icon next to Add Server on the Multiplayer screen.

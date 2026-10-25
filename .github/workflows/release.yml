@@ -37,4 +37,5 @@ jobs:
     uses: ./.github/workflows/modrinth.yml
     with:
       tag: ${{ github.ref_name }}
+      replace: true
     secrets: inherit
