@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/logo.png" width="128" height="128" alt="The Serverify logo, a block with an S and signal arcs"></p>
+
 # Serverify
 
 [![Build](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml/badge.svg)](https://github.com/Louchatfroff/serverify/actions/workflows/build.yml)
@@ -105,7 +107,7 @@ Serverify is built on these libraries, used under their own licenses:
 
 Serverify's source code, tests, documentation and website text were written with the help of an AI coding assistant ([Claude](https://www.anthropic.com/claude), by Anthropic).
 
-No assets are AI-generated or taken from other people's work. Serverify adds no images, textures, sounds, models or fonts of its own. The only images in the jar come from the Elementa library (see above). The screenshots in this repository are real captures of the game running the mod. They show Minecraft's interface and server names and icons from public listings, which belong to their owners. The website uses the open-licensed fonts Inter, Open Sans and Inconsolata. The test fixtures are short captured samples of public listing data, used only to test the parsers.
+No assets are taken from other people's work. The logo was drawn by hand by Louchatfroff in an image editor. Serverify adds no other images, textures, sounds, models or fonts of its own. Apart from the logo, the only images in the jar come from the Elementa library (see above). The screenshots in this repository are real captures of the game running the mod. They show Minecraft's interface and server names and icons from public listings, which belong to their owners. The website uses the open-licensed fonts Inter, Open Sans and Inconsolata. The test fixtures are short captured samples of public listing data, used only to test the parsers.
 
 ## License
 

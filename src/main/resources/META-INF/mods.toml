@@ -11,6 +11,7 @@ displayName = "Serverify"
 authors = "Louchatfroff"
 description = "In-game Minecraft server browser."
 displayURL = "https://serverify.louchat.site"
+logoFile = "assets/serverify/icon.png"
 displayTest = "IGNORE_ALL_VERSION"
 
 [[dependencies.serverify]]

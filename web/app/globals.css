@@ -68,6 +68,12 @@ a {
   font-weight: 700;
 }
 
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .nav a {
   font-weight: 500;
   color: var(--muted);
