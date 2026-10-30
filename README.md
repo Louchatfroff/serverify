@@ -66,6 +66,10 @@ Fabric builds run the scripted in-game tests that save screenshots. `runProducti
 
 The Forge builds for 1.8.9 and 1.12.2 come from the separate Gradle project in `legacy/`, which needs JDK 21 to run Gradle and JDK 8 to compile. Run `./gradlew :1.12.2-forge:build` or `./gradlew :1.8.9-forge:build` inside `legacy/`. Add `-Psmoke=true` to bake in the screen test driver.
 
+## Horizon
+
+[`horizon/serverify`](horizon/serverify) is a native mod for [Horizon](https://playhorizon.dev), the Rust rewrite of Minecraft. Horizon's hook points have no screens, so it shows a server browser in your web browser (a page served from your own computer, opened with a key, `/serverify web` or the mod's settings page) and also works from chat. It lists Modrinth servers that accept offline-mode players, the only ones Horizon can join today.
+
 ## How it works
 
 ```

@@ -1,0 +1,101 @@
+[mod]
+id = "serverify"
+version = "0.1.0"
+priority = 100
+
+# The commit it was tested on.
+[compatibility]
+horizon_revision = "6f8c7a0e5d531d3834c4d0be4659a1db8e7e5c2a"
+
+# runtime.rs becomes the module crate::game::serverify.
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "serverify"
+source = "runtime.rs"
+
+[[module]]
+id = "net"
+file = "crates/horizon-client/src/game.rs"
+name = "serverify_net"
+source = "net.rs"
+
+[[module]]
+id = "files"
+file = "crates/horizon-client/src/game.rs"
+name = "serverify_files"
+source = "files.rs"
+
+[[module]]
+id = "web"
+file = "crates/horizon-client/src/game.rs"
+name = "serverify_web"
+source = "web.rs"
+
+[[module]]
+id = "page"
+file = "crates/horizon-client/src/game.rs"
+name = "serverify_page"
+source = "page.rs"
+
+[[injection]]
+id = "tick"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_tick"
+helper = "tick.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+]
+
+[[injection]]
+id = "command"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_command"
+helper = "command.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "&mut *ran" },
+]
+
+[[injection]]
+id = "list"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_mods"
+helper = "list.rs"
+bindings = [
+  { name = "mods", ty = "&mut Vec<crate::game::native_hooks::NativeMod>", value = "&mut *mods" },
+]
+
+[[injection]]
+id = "settings"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_settings"
+helper = "settings.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "buttons", ty = "&mut Vec<String>", value = "&mut *buttons" },
+]
+
+[[injection]]
+id = "click"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_settings_click"
+helper = "click.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "mod_id", ty = "&str", value = "mod_id" },
+  { name = "button", ty = "usize", value = "button" },
+]
+
+[[injection]]
+id = "key"
+kind = "HEAD"
+target = "horizon_client::game::native_hooks::Game<'_>::native_key"
+helper = "key.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "key", ty = "&str", value = "key" },
+  { name = "pressed", ty = "bool", value = "pressed" },
+]

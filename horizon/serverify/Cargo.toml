@@ -1,0 +1,12 @@
+[package]
+name = "serverify"
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-only"
+publish = false
+
+[lib]
+path = "mixins/serverify/runtime.rs"
+
+[dependencies]
+serde_json = "1"

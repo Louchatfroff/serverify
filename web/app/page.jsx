@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { REPO, REPO_URL, getLatestRelease } from "../lib/releases";
+import Link from "next/link";
 import Download from "./download";
+import Footer from "./footer";
 
 const shot = (name) => `https://raw.githubusercontent.com/${REPO}/main/docs/screenshots/${name}.png`;
 
@@ -9,7 +11,7 @@ const FEATURES = [
   ["Live status", "Real ping, player count, version and the server's own MOTD, refreshed automatically."],
   ["Join or save", "Connect straight away, or add the server to your Multiplayer list in one click."],
   ["Favorites", "Keep the servers you like in a local list that works offline."],
-  ["Several sources", "minecraft-list.info first, then more sites, with duplicates removed."],
+  ["Several sources", "Modrinth first, then more sites, with duplicates removed."],
   ["Private by design", "Client-side only. No account, no telemetry."],
 ];
 
@@ -23,7 +25,10 @@ export default async function Home() {
           <Image src="/logo.png" alt="" width={28} height={28} />
           Serverify
         </span>
-        <a href={REPO_URL}>GitHub</a>
+        <span className="links">
+          <Link href="/docs">Docs</Link>
+          <a href={REPO_URL}>GitHub</a>
+        </span>
       </nav>
 
       <header className="hero">
@@ -69,19 +74,17 @@ export default async function Home() {
               Put the Serverify download above, and the Fabric files if you use Fabric, in your <code>.minecraft/mods</code> folder.
             </li>
             <li>
-              Start the game, open <strong>Multiplayer</strong> and press the <strong>Serverify</strong> button.
+              Start the game, open <strong>Multiplayer</strong> and press the globe button next to <strong>Add Server</strong>.
             </li>
           </ol>
           <p className="note">
             Optional: <a href="https://modrinth.com/mod/modmenu">Mod Menu</a> adds a settings screen. Each download works for the Minecraft
-            versions in its name (for example 26.1.x covers 26.1, 26.1.1 and 26.1.2).
+            versions in its name (for example 26.1.x covers 26.1, 26.1.1 and 26.1.2). Read the <Link href="/docs/java">Java Edition guide</Link>, or the <Link href="/docs/horizon">Horizon guide</Link> if you play Horizon.
           </p>
         </section>
       </main>
 
-      <footer>
-        Serverify by <a href="https://github.com/Louchatfroff">Louchatfroff</a>. Free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU GPL v3</a>. Interface heavily inspired by <a href="https://github.com/DeDiamondPro/Resourcify">Resourcify</a> by DeDiamondPro. Written with AI assistance. The logo was drawn by hand by Louchatfroff. No stolen assets. Not affiliated with Mojang or Microsoft. Server listings come from third-party sites.
-      </footer>
+      <Footer />
     </div>
   );
 }

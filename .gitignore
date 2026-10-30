@@ -40,3 +40,5 @@ legacy/versions/*/build/
 legacy/src/main/java/com/serverify/legacy/
 legacy/src/main/java/com/serverify/smoke/
 legacy/.kotlin/
+horizon/serverify/target/
+horizon/serverify/dist/
